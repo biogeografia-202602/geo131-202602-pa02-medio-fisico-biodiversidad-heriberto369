@@ -1,0 +1,456 @@
+---
+title: "Preparación docente · limpieza de GBIF y generación de paquetes municipales"
+author: ""
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    code_folding: show
+editor_options:
+  chunk_output_type: console
+---
+
+> Este cuaderno prepara los datos que recibirán los estudiantes. **No forma parte del trabajo estudiantil.** Está diseñado para ejecutarse con el CSV grande de GBIF `datos_fuente/0003509-260715120105164.csv`, que no se incluye en el repositorio.
+
+# 1. Paquetes y parámetros
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(purrr)
+library(sf)
+library(CoordinateCleaner)
+library(readr)
+library(tibble)
+library(ggplot2)
+
+raiz <- if (file.exists("medio-fisico-ambiente-biodiversidad-municipio-dominicano.Rproj")) "." else ".."
+source(file.path(raiz, "R", "funciones_pa02.R"))
+
+ruta_gbif <- file.path(raiz, "datos_fuente", "0003509-260715120105164.csv")
+ruta_municipios <- file.path(raiz, "datos_fuente", "municipios-rd.gpkg")
+ruta_h3 <- file.path(raiz, "datos_fuente", "all_sources_all_variables_res_7.gpkg")
+dir_salida <- file.path(raiz, "datos_por_municipio")
+dir.create(dir_salida, showWarnings = FALSE, recursive = TRUE)
+
+# Criterios conservadores, fáciles de cambiar antes de regenerar los paquetes
+buffer_centroide_m <- 2000
+buffer_institucion_m <- 2000
+incertidumbre_max_m <- 5000
+
+# Umbrales OPERATIVOS para recomendar municipios
+min_registros_apto <- 200
+min_especies_apto <- 200
+min_hex_5spp_apto <- 15
+
+min_hex_5spp_condicional <- 8
+min_especies_condicional <- 120
+```
+
+# 2. Leer y revisar capas espaciales
+
+```{r leer-espaciales}
+municipios <- st_read(ruta_municipios, quiet = TRUE) |>
+  mutate(
+    provincia_codigo = PROV,
+    municipio_codigo = MUN,
+    municipio = TOPONIMIA,
+    id_municipio = ENLACE
+  )
+
+h3 <- st_read(ruta_h3, quiet = TRUE, optional = TRUE)
+
+st_crs(municipios)
+st_crs(h3)
+nrow(municipios)
+nrow(h3)
+ncol(h3)
+```
+
+Las capas de entrada usan CRS distintos. Para operaciones de punto-en-polígono transformaremos los municipios a EPSG:4326. Para áreas/distancias, si fueran necesarias, se utilizará EPSG:32619.
+
+```{r crs}
+municipios_ll <- st_transform(municipios, 4326)
+stopifnot(st_crs(h3)$epsg == 4326)
+```
+
+# 3. Leer el CSV grande de GBIF
+
+`data.table::fread()` detecta automáticamente el separador y es apropiado para un archivo de cientos de miles de filas.
+
+```{r leer-gbif}
+stopifnot(file.exists(ruta_gbif))
+gbif <- fread(ruta_gbif, data.table = FALSE, showProgress = TRUE)
+
+nrow(gbif)
+ncol(gbif)
+names(gbif)
+```
+
+# 4. Normalización taxonómica mínima
+
+La matriz de comunidad será a nivel de **especie**. Si existe la columna `species`, se usa para colapsar registros infraespecíficos a su especie; de lo contrario se intenta `acceptedScientificName` y después `scientificName`.
+
+```{r taxonomia}
+gbif$especie <- nombre_especie_preferido(gbif)
+
+if ("occurrenceStatus" %in% names(gbif)) {
+  gbif <- gbif |> filter(is.na(occurrenceStatus) | toupper(occurrenceStatus) != "ABSENT")
+}
+if ("basisOfRecord" %in% names(gbif)) {
+  gbif <- gbif |> filter(is.na(basisOfRecord) | toupper(basisOfRecord) != "FOSSIL_SPECIMEN")
+}
+
+gbif <- gbif |>
+  filter(!is.na(especie), especie != "")
+```
+
+# 5. Validación básica de coordenadas
+
+`cc_val()` debe aplicarse antes de las demás pruebas de `CoordinateCleaner`.
+
+```{r coords-validas}
+stopifnot(all(c("decimalLongitude", "decimalLatitude") %in% names(gbif)))
+
+gbif$decimalLongitude <- suppressWarnings(as.numeric(gbif$decimalLongitude))
+gbif$decimalLatitude <- suppressWarnings(as.numeric(gbif$decimalLatitude))
+
+flag_val <- CoordinateCleaner::cc_val(
+  gbif,
+  lon = "decimalLongitude", lat = "decimalLatitude",
+  value = "flagged", verbose = TRUE
+)
+
+gbif_validas <- gbif[flag_val, , drop = FALSE]
+```
+
+# 6. Banderas de CoordinateCleaner
+
+En lugar de encadenar eliminaciones sin saber por qué desapareció cada fila, se crea una bandera por prueba. `TRUE` significa que el registro **superó** la prueba.
+
+```{r cc-flags}
+gbif_validas$cc_zero_ok <- CoordinateCleaner::cc_zero(
+  gbif_validas, lon = "decimalLongitude", lat = "decimalLatitude",
+  value = "flagged", verbose = TRUE
+)
+
+gbif_validas$cc_centroid_ok <- CoordinateCleaner::cc_cen(
+  gbif_validas, lon = "decimalLongitude", lat = "decimalLatitude",
+  species = "especie", buffer = buffer_centroide_m,
+  geod = TRUE, test = "both", value = "flagged", verbose = TRUE
+)
+
+gbif_validas$cc_inst_ok <- CoordinateCleaner::cc_inst(
+  gbif_validas, lon = "decimalLongitude", lat = "decimalLatitude",
+  species = "especie", buffer = buffer_institucion_m,
+  geod = TRUE, value = "flagged", verbose = TRUE
+)
+```
+
+> **Nota metodológica.** La prueba de instituciones es deliberadamente conservadora y puede eliminar ocurrencias biológicamente reales cerca de jardines botánicos, universidades o herbarios. Por eso se exporta también un registro de rechazos y se conserva el motivo. El buffer puede modificarse tras revisar el mapa.
+
+# 7. Incertidumbre de coordenadas
+
+Debido a que H3 res. 7 tiene celdas de pocos kilómetros, se marca como problemática una incertidumbre conocida superior al umbral elegido. Los `NA` no se eliminan automáticamente: representan incertidumbre **no documentada**, que deberá discutirse.
+
+```{r incertidumbre}
+if ("coordinateUncertaintyInMeters" %in% names(gbif_validas)) {
+  gbif_validas <- gbif_validas |>
+    mutate(
+      coordinateUncertaintyInMeters = suppressWarnings(as.numeric(coordinateUncertaintyInMeters)),
+      incertidumbre_ok = is.na(coordinateUncertaintyInMeters) |
+        coordinateUncertaintyInMeters <= incertidumbre_max_m
+    )
+} else {
+  gbif_validas$incertidumbre_ok <- TRUE
+}
+```
+
+# 8. Filtrado espacial con la capa oficial de municipios
+
+Esta operación tiene dos propósitos: eliminar puntos fuera del territorio municipal usado en la práctica —incluidos puntos en el mar— y asignar cada registro a **un municipio concreto**.
+
+```{r asignar-municipio}
+pts <- st_as_sf(
+  gbif_validas,
+  coords = c("decimalLongitude", "decimalLatitude"),
+  crs = 4326,
+  remove = FALSE
+)
+
+pts_mun <- st_join(
+  pts,
+  municipios_ll |>
+    select(provincia_codigo, municipio_codigo, municipio, id_municipio),
+  join = st_within,
+  left = TRUE
+)
+
+pts_mun <- pts_mun |>
+  mutate(
+    municipio_ok = !is.na(id_municipio),
+    limpieza_ok = cc_zero_ok &
+      cc_centroid_ok &
+      cc_inst_ok &
+      incertidumbre_ok &
+      municipio_ok
+  )
+```
+
+# 9. Duplicados exactos y asignación a H3
+
+No se elimina el hecho de que varias especies puedan compartir coordenadas. Se eliminan solamente duplicados exactos del identificador de ocurrencia cuando esté disponible. Después cada punto limpio se asigna a un `hex_id` mediante unión espacial.
+
+```{r h3-join}
+pts_ok <- pts_mun |> filter(limpieza_ok)
+
+if ("occurrenceID" %in% names(pts_ok)) {
+  pts_ok <- pts_ok |>
+    arrange(occurrenceID) |>
+    distinct(occurrenceID, .keep_all = TRUE)
+}
+
+pts_h3 <- st_join(
+  pts_ok,
+  h3 |> select(hex_id),
+  join = st_within,
+  left = TRUE
+) |>
+  filter(!is.na(hex_id))
+```
+
+# 10. Diagnóstico nacional de muestreo
+
+Calculamos métricas útiles para decidir qué municipios pueden soportar los análisis de la práctica.
+
+```{r diagnostico}
+tmp_hex <- pts_h3 |> st_drop_geometry()
+if ("occurrenceID" %in% names(tmp_hex)) {
+  tmp_hex <- tmp_hex |> distinct(id_municipio, hex_id, especie, occurrenceID, .keep_all = TRUE)
+}
+
+por_hex <- tmp_hex |>
+  group_by(id_municipio, hex_id) |>
+  summarise(
+    n_registros = n(),
+    riqueza = n_distinct(especie),
+    .groups = "drop"
+  )
+
+spp_hex <- pts_h3 |>
+  st_drop_geometry() |>
+  distinct(id_municipio, hex_id, especie) |>
+  count(id_municipio, especie, name = "n_hex")
+
+h3_hab <- h3
+h3_hab$habitat_esa <- clasificar_habitat_esa(h3_hab)
+h3_hab <- h3_hab |>
+  select(hex_id, habitat_esa)
+
+hab_mun <- por_hex |>
+  left_join(st_drop_geometry(h3_hab), by = "hex_id") |>
+  count(id_municipio, habitat_esa, name = "n_hex")
+
+resumen_mun <- pts_h3 |>
+  st_drop_geometry() |>
+  group_by(id_municipio, municipio, provincia_codigo) |>
+  summarise(
+    n_registros = n(),
+    n_especies = n_distinct(especie),
+    n_hex_con_registros = n_distinct(hex_id),
+    .groups = "drop"
+  ) |>
+  left_join(
+    por_hex |>
+      group_by(id_municipio) |>
+      summarise(
+        n_hex_5spp = sum(riqueza >= 5),
+        mediana_registros_hex = median(n_registros),
+        .groups = "drop"
+      ),
+    by = "id_municipio"
+  ) |>
+  left_join(
+    spp_hex |>
+      group_by(id_municipio) |>
+      summarise(n_especies_3hex = sum(n_hex >= 3), .groups = "drop"),
+    by = "id_municipio"
+  ) |>
+  left_join(
+    hab_mun |>
+      filter(!is.na(habitat_esa), n_hex >= 3) |>
+      count(id_municipio, name = "n_grupos_habitat_3hex"),
+    by = "id_municipio"
+  ) |>
+  mutate(
+    n_grupos_habitat_3hex = replace_na(n_grupos_habitat_3hex, 0L),
+  
+    categoria = case_when(
+  
+      n_registros >= min_registros_apto &
+        n_especies >= min_especies_apto &
+        n_hex_5spp >= min_hex_5spp_apto ~ "APTO",
+  
+      n_especies >= min_especies_condicional &
+        n_hex_5spp >= min_hex_5spp_condicional ~ "CONDICIONAL",
+  
+      TRUE ~ "NO RECOMENDADO"
+    )
+  ) |>
+  arrange(desc(categoria == "APTO"), desc(n_hex_5spp), desc(n_especies))
+
+write_csv(resumen_mun, file.path(dir_salida, "00_resumen_elegibilidad_municipios.csv"))
+resumen_mun
+```
+
+Los umbrales anteriores son **operativos**: sirven para impedir que un estudiante reciba un municipio con una matriz demasiado pequeña. Deben revisarse después de mirar la distribución real.
+
+# 11. Tabla de motivos de exclusión
+
+```{r rechazos}
+rechazos <- pts_mun |>
+  st_drop_geometry() |>
+  mutate(
+    motivo = case_when(
+      !cc_zero_ok ~ "coordenada_cero",
+      !cc_centroid_ok ~ "centroide_administrativo",
+      !cc_inst_ok ~ "proximidad_institucion",
+      !incertidumbre_ok ~ "incertidumbre_excesiva",
+      !municipio_ok ~ "fuera_municipios_rd_o_mar",
+      TRUE ~ "aceptado"
+    )
+  )
+
+write_csv(
+  rechazos |> count(motivo, name = "n"),
+  file.path(dir_salida, "00_resumen_limpieza.csv")
+)
+```
+
+# 12. Generar un paquete por municipio
+
+Cada directorio municipal contendrá registros GBIF, H3 ambientales completos y el límite municipal. Se exportan **datos básicos**, no las matrices ya filtradas: construirlas forma parte de la práctica estudiantil.
+
+```{r exportar-paquetes}
+slugify <- function(x) {
+  x |>
+    iconv(to = "ASCII//TRANSLIT") |>
+    tolower() |>
+    str_replace_all("[^a-z0-9]+", "-") |>
+    str_replace_all("(^-|-$)", "")
+}
+
+campos_gbif_preferidos <- c(
+  "occurrenceID", "gbifID", "especie", "scientificName", "acceptedScientificName",
+  "family", "genus", "taxonRank", "basisOfRecord", "eventDate", "year",
+  "decimalLongitude", "decimalLatitude", "coordinateUncertaintyInMeters",
+  "datasetKey", "institutionCode", "collectionCode",
+  "provincia_codigo", "municipio_codigo", "municipio", "id_municipio", "hex_id"
+)
+
+ids <- resumen_mun |> filter(categoria %in% c("APTO", "CONDICIONAL")) |> pull(id_municipio)
+
+walk(ids, function(id) {
+  info <- resumen_mun |> filter(id_municipio == id) |> slice(1)
+  slug <- slugify(info$municipio)
+  d <- file.path(dir_salida, paste0(id, "_", slug))
+  dir.create(d, showWarnings = FALSE, recursive = TRUE)
+
+  reg <- pts_h3 |> filter(id_municipio == id)
+  campos <- intersect(campos_gbif_preferidos, names(reg))
+  reg_csv <- reg |>
+    st_drop_geometry() |>
+    select(all_of(campos))
+  write_csv(reg_csv, file.path(d, paste0("gbif_flora_", slug, ".csv")))
+
+  mun <- municipios |> filter(id_municipio == id)
+  mun_ll <- st_transform(mun, 4326)
+
+  # Se incluyen TODOS los H3 que intersectan el municipio, incluso sin registros GBIF.
+  # Esto permite visualizar espacialmente el sesgo de muestreo.
+  toca <- lengths(st_intersects(h3, mun_ll)) > 0
+  h3_m <- h3[toca, ]
+  h3_m$habitat_esa <- clasificar_habitat_esa(h3_m)
+  st_write(h3_m, file.path(d, paste0("h3_ambiental_", slug, ".gpkg")), delete_dsn = TRUE, quiet = TRUE)
+
+  st_write(mun, file.path(d, paste0("municipio_", slug, ".gpkg")), delete_dsn = TRUE, quiet = TRUE)
+
+  write_csv(info, file.path(d, "resumen_municipio.csv"))
+})
+```
+
+> Cada paquete incluye **todos los H3 que intersectan el municipio**, incluso los que no contienen registros GBIF. Esto permite cartografiar áreas ambientales disponibles pero no muestreadas y hace visible el sesgo espacial de observación.
+
+
+```{r}
+# Municipios que se ofrecerán para la práctica
+municipios_candidatos <- resumen_mun |>
+  filter(categoria %in% c("APTO", "CONDICIONAL")) |>
+  mutate(
+    codigo_carpeta = sprintf("%06d", as.integer(id_municipio))
+  ) |>
+  select(
+    codigo_carpeta,
+    id_municipio,
+    municipio,
+    provincia_codigo,
+    categoria,
+    n_registros,
+    n_especies,
+    n_hex_con_registros,
+    n_hex_5spp,
+    mediana_registros_hex,
+    n_especies_3hex,
+    n_grupos_habitat_3hex
+  ) |>
+  arrange(categoria, municipio)
+
+readr::write_csv(
+  municipios_candidatos,
+  file.path(raiz, "datos_fuente", "municipios_candidatos.csv")
+)
+```
+
+
+# 13. Exportar auditoría nacional
+
+```{r auditoria}
+dir.create(file.path(dir_salida, "_auditoria"), showWarnings = FALSE, recursive = TRUE)
+
+st_write(
+  pts_h3,
+  file.path(dir_salida, "_auditoria", "gbif_flora_limpio_con_h3.gpkg"),
+  delete_dsn = TRUE,
+  quiet = TRUE
+)
+
+saveRDS(
+  list(
+    resumen_mun = resumen_mun,
+    por_hex = por_hex,
+    spp_hex = spp_hex
+  ),
+  file.path(dir_salida, "_auditoria", "diagnostico_muestreo.rds")
+)
+```
+
+# 14. Control visual nacional
+
+```{r mapa-control, fig.width=9, fig.height=7}
+ggplot() +
+  geom_sf(data = municipios_ll, fill = NA, linewidth = 0.15) +
+  geom_sf(data = pts_h3, size = 0.15, alpha = 0.25) +
+  theme_bw() +
+  labs(title = "Registros de flora conservados después de la limpieza")
+```
+
+# 15. Sesión
+
+```{r session-info}
+sessionInfo()
+```

@@ -1,0 +1,10 @@
+\.Rhistory
+.RData
+.Rproj.user/
+*_cache/
+*_files/
+preparacion-datos/cache/
+salidas/*
+!salidas/.gitkeep
+datos_fuente/0003509-260715120105164.csv
+datos_por_municipio/_auditoria

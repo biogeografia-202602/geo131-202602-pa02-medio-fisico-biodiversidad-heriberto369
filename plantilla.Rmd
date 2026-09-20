@@ -1,0 +1,263 @@
+---
+title: "Mi manuscrito en APA 7"
+author: "Autor"
+affiliation: "Universidad Autónoma de Santo Domingo (UASD)"
+output:
+  bookdown::pdf_document2:
+    latex_engine: xelatex
+    fig_caption: true
+    extra_dependencies: ["float", "booktabs", "longtable"]
+documentclass: apa7
+classoption: [man,floatsintext]
+fontsize: 12pt
+lang: es-ES
+bibliography: bibliografia.bib
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+header-includes:
+  - \title{Mi manuscrito en APA 7}
+  - \shorttitle{Título corto}
+  - \affiliation{Universidad Autónoma de Santo Domingo (UASD)}
+  - \abstract{ESCRIBE AQUÍ TU RESUMEN. NO INTRODUZCAS ENTER NI SALTOS DE LÍNEA.}
+  - \keywords{biogeografía, biodiversidad, ambiente, palabra clave 4}
+  - \usepackage{orcidlink}
+  - \usepackage[all]{nowidow}
+  - \usepackage{pdflscape}
+  - \renewcommand\spanishtablename{Tabla}
+  - \usepackage{xcolor}
+  - \usepackage{tabu}
+  - \usepackage{xurl}
+  - \usepackage{setspace}
+  - \usepackage{etoolbox}
+  - \usepackage{fvextra}
+  - \AtBeginEnvironment{Shaded}{\singlespacing\footnotesize}
+  - \DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\scriptsize,breaklines=true,breakanywhere=true,formatcom=\singlespacing}
+---
+
+\pagebreak
+
+> **ANTES DE ENTREGAR:** este archivo es una plantilla didáctica. Sustituye las instrucciones y elimina cualquier ejemplo que no corresponda a tu investigación.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  cache = FALSE,
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  dpi = 300,
+  fig.pos = "H",
+  fig.align = "center",
+  out.width = "100%"
+)
+options(knitr.kable.NA = "")
+set.seed(99)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(sf)
+theme_set(theme_bw())
+```
+
+# Introducción
+
+Presenta el problema biogeográfico, explica por qué la heterogeneidad ambiental puede relacionarse con la composición y riqueza de plantas, describe las limitaciones generales de datos secundarios de ocurrencia y termina con **pregunta, objetivo e hipótesis**. Sustenta la sección con bibliografía científica que deberás citar usando el estándar BibTeX.
+
+# Materiales y métodos
+
+Describe el municipio, los datos de GBIF, el procedimiento de limpieza recibido, H3 res. 7, las variables ambientales seleccionadas, la construcción y filtrado de matrices y los métodos estadísticos. No escribas “se usó R” como sustituto de una descripción metodológica.
+
+## Área de estudio y datos
+
+Incluye una figura de localización y una tabla de fuentes de datos.
+
+```{r tabla-datos, eval=FALSE}
+tabla_datos <- tibble(
+  Fuente = c("GBIF", "H3 ambiental", "Municipios"),
+  Contenido = c("Registros de flora", "Variables ambientales por H3", "Límite administrativo"),
+  Uso = c("Matriz de comunidad", "Matriz ambiental", "Área de estudio")
+)
+
+kable(
+  tabla_datos,
+  format = "latex",
+  booktabs = TRUE,
+  caption = "Fuentes de datos utilizadas en el estudio."
+) |>
+  kable_styling(latex_options = "HOLD_position", full_width = FALSE)
+```
+
+## Matriz de comunidad e intensidad de registro
+
+Explica qué constituye una presencia, qué filtros utilizaste y cómo se utilizó el número de registros por H3 como medida de intensidad de registro. No lo interpretes como una medida directa del esfuerzo de muestreo.
+
+## Variables ambientales
+
+Enumera variables, unidades, fuente y justificación ecológica. Explica cómo trataste colinealidad y estandarización.
+
+## Análisis estadístico
+
+Describe NMDS/disimilitud, `envfit`, análisis de hábitat y dispersión, regresión de riqueza y especies indicadoras. Indica número de permutaciones y criterios relevantes.
+
+# Resultados
+
+Organiza los resultados siguiendo tus preguntas, no el orden en que ejecutaste funciones. Incluye valores cuantitativos en el texto y refiere todas las figuras/tablas con `\@ref()`.
+
+## Patrón espacial e intensidad de registro
+
+## Composición florística y ambiente
+
+## Riqueza observada y ambiente
+
+## Diferencias y asociaciones entre hábitats, si procede
+
+## Otros análisis que correspondan
+
+# Discusión
+
+Interpreta los resultados, relaciónalos con literatura y separa cuidadosamente **señal ecológica** de **sesgo de observación**. Discute resolución espacial, variables agregadas, filtros de especies, coordenadas y ausencia de inventarios estandarizados.
+
+# Conclusiones
+
+Responde al objetivo con afirmaciones directamente respaldadas por los resultados.
+
+# Auditoría de IA
+
+Si utilizaste IA, documenta herramienta, tarea, un error o limitación concreta, cómo lo verificaste y cómo lo corregiste. Si no utilizaste IA, decláralo explícitamente.
+
+# Guía mínima de figuras, tablas y referencias cruzadas {-}
+
+> **Elimina esta sección del manuscrito final.** Los ejemplos siguientes muestran distintas formas de insertar figuras y tablas con *caption* y referencias cruzadas automáticas mediante `bookdown`.
+
+## Figura procedente de un archivo {-}
+
+Una figura ya existente puede insertarse mediante `knitr::include_graphics()`. El *caption* se declara en `fig.cap` y la etiqueta de referencia procede del nombre del *chunk*.
+
+```{r figura-archivo-ejemplo, fig.cap="Ejemplo de figura incorporada desde un archivo externo.", out.width="85%"}
+knitr::include_graphics(
+  "README_files/figure-gfm/mapa-municipios-candidatos-1.png"
+)
+```
+
+La figura anterior se referencia en el texto como `Figura \@ref(fig:figura-archivo-ejemplo)`.
+
+## Figura generada con código {-}
+
+Las figuras analíticas deben generarse reproduciblemente siempre que sea posible.
+
+```{r figura-codigo-ejemplo, fig.cap="Ejemplo de figura generada reproduciblemente con código R."}
+datos_ejemplo <- tibble(
+  x = 1:10,
+  y = c(2, 3, 5, 4, 7, 8, 8, 10, 11, 13)
+)
+
+ggplot(datos_ejemplo, aes(x, y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Variable X",
+    y = "Variable Y"
+  )
+```
+
+La referencia correspondiente es Figura `\@ref(fig:figura-codigo-ejemplo)`.
+
+## Tabla escrita directamente en Markdown {-}
+
+Utiliza tablas Markdown sólo cuando exista una razón para mantener una tabla externa al flujo analítico reproducible. Añade una etiqueta en el *caption* para poder referenciarla automáticamente.
+
+| Variable | Unidad | Fuente |
+|:---------|:-------|:-------|
+| Elevación | m | Modelo digital de elevación |
+| Precipitación | mm | Datos climáticos |
+
+Table: (\#tab:tabla-markdown-ejemplo) Ejemplo de tabla escrita directamente en Markdown.
+
+En el texto se referencia como Tabla `\@ref(tab:tabla-markdown-ejemplo)`.
+
+## Tabla generada con código {-}
+
+Para resultados y tablas derivadas de los datos, utiliza preferentemente objetos de R.
+
+```{r tabla-codigo-ejemplo}
+tabla_ejemplo <- tibble(
+  Variable = c("Elevación", "Precipitación"),
+  Unidad = c("m", "mm"),
+  Fuente = c(
+    "Modelo digital de elevación",
+    "Datos climáticos"
+  )
+)
+
+knitr::kable(
+  tabla_ejemplo,
+  format = "latex",
+  booktabs = TRUE,
+  caption = "Ejemplo de tabla generada reproduciblemente a partir de un objeto de R."
+) |>
+  kableExtra::kable_styling(
+    latex_options = "HOLD_position",
+    full_width = FALSE
+  )
+```
+
+La tabla se referencia como Tabla `\@ref(tab:tabla-codigo-ejemplo)`.
+
+Recuerda que **la etiqueta del chunk debe ser única**. No escribas manualmente números como "Figura 2" o "Tabla 3"; utiliza siempre `\@ref()`.
+
+## Citas bibliográficas parentéticas y narrativas {-}
+
+Las referencias bibliográficas deben insertarse mediante las claves incluidas en `bibliografia.bib`; no escribas manualmente autor y año.
+
+### Cita parentética {-}
+
+Cuando la referencia respalda una afirmación completa, utiliza una cita parentética:
+
+```markdown
+Los datos de ocurrencia de biodiversidad pueden presentar errores geográficos
+y sesgos de muestreo [@zizka2019coordinatecleaner].
+```
+
+El resultado será equivalente a:
+
+> Los datos de ocurrencia de biodiversidad pueden presentar errores geográficos y sesgos de muestreo (Zizka et al., 2019).
+
+También puedes incluir varias referencias dentro de una misma cita:
+
+```markdown
+Los métodos de ecología numérica permiten estudiar relaciones entre composición
+de comunidades y gradientes ambientales [@legendre2012numerical; @borcard2018numerical].
+```
+
+### Cita narrativa {-}
+
+Cuando el autor forma parte gramatical de la oración, utiliza la clave sin corchetes:
+
+```markdown
+@zizka2019coordinatecleaner desarrollaron herramientas para detectar problemas
+frecuentes en coordenadas de registros de biodiversidad.
+```
+
+El resultado será equivalente a:
+
+> Zizka et al. (2019) desarrollaron herramientas para detectar problemas frecuentes en coordenadas de registros de biodiversidad.
+
+La diferencia es importante:
+
+- `[@clave]` → cita **parentética**;
+- `@clave` → cita **narrativa**.
+
+No escribas manualmente expresiones como `(Zizka et al., 2019)` o `Zizka et al. (2019)`, porque el formato debe generarse automáticamente. En caso de que la fuente no esté transcrita aún a `bibliografia.bib`, deberás primero transcribirla para poder citarla.
+
+# Declaración de reproducibilidad
+
+Aquí se indica dónde se encuentra el código, qué datos se proporcionaron, qué archivo de GBIF grande no se incluye, las versiones principales de software y los pasos manuales. La información completa de la sesión utilizada para generar el manuscrito se conserva en `session_info_manuscript.txt`.
+
+```{r informacion-sesion, include=FALSE}
+writeLines(
+  capture.output(sessionInfo()),
+  "session_info_manuscript.txt"
+)
+```
+
+Indica dónde se encuentra el código (puedes usar la ruta de tu repo GitHub y citarla apropiadamente como un tipo de fuente `@misc`), qué datos se proporcionaron, la fuente GBIF grande (recuerda que el archivo grande GBIF con el que se hicieron los packs por municipio, no se incluyó en el repo, pero sí te dejé una nota en el README sobre cómo citarlo), versiones de software y pasos manuales.
+
+# Referencias {-}

@@ -1,0 +1,337 @@
+---
+title: "Cuaderno de trabajo PA02 · comunidad, ambiente y biodiversidad"
+author: "NOMBRE DEL/DE LA ESTUDIANTE"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    code_folding: show
+editor_options:
+  chunk_output_type: console
+---
+
+> Este cuaderno es un **andamiaje**, no una solución. Este cuaderno es un apoyo para guiar tus análisis y probarlos antes de darlos por válidos. No uses el código de este cuaderno de forma mecánica; es necesario que comprendas sus puntos fundamentales. Sustituye el nombre de tu municipio allí donde corresponda, elige variables y toma decisiones para obtener los mejores resultados posibles para responder a tus preguntas. Este cuaderno no produce un manuscrito entregable, no contiene todos los análisis necesarios, ni está configurado para producir, de forma automática, resultados consistentes. Es sólo una muestra de algunos análisis posibles. Además, recuerda que la práctica incluye la entrega de un manuscrito, por lo que las figuras definitivas y la narración científica deben pasar a `plantilla.Rmd`.
+
+```{r setup}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+set.seed(99)
+library(MASS)
+library(tidyverse)
+library(sf)
+library(vegan)
+library(indicspecies)
+raiz <- if (file.exists("medio-fisico-ambiente-biodiversidad-municipio-dominicano.Rproj")) "." else ".."
+source(file.path(raiz, "R", "funciones_pa02.R"))
+```
+
+# 1. Importar tus datos
+
+```{r importar}
+nombre_mun <- "Puerto Plata" # <-- Nombre de tu municipio elegido dentro de ""
+datos_mun <- verificar_nombre_carpeta(
+  nombre_mun,
+  raiz
+)
+codigo_mun <- datos_mun$codigo_mun
+nombre_mun <- datos_mun$nombre_mun
+nombre_carpeta <- datos_mun$nombre_carpeta
+ruta <- file.path(raiz, "datos_por_municipio", nombre_carpeta)
+reg <- read_csv(paste0(ruta, "/gbif_flora_", nombre_mun, ".csv"))
+h3 <- st_read(paste0(ruta, "/h3_ambiental_", nombre_mun, ".gpkg"), quiet = TRUE, optional = TRUE)
+mun <- st_read(paste0(ruta, "/municipio_", nombre_mun, ".gpkg"), quiet = TRUE, optional = TRUE)
+```
+
+# 2. Matriz de comunidad
+
+```{r comunidad}
+mc <- generar_matriz_comunidad(
+  reg,
+  min_hex_especie = 1,   # Un "1" conserva las especies presentes en al menos 1 H3
+  min_especies_hex = 1,  # Un "1" conserva los H3 con al menos 1 especie
+  col_hex = "hex_id",
+  col_especie = "especie"
+)
+
+dim(mc)
+```
+
+> Los argumentos `min_hex_especie` y `min_especies_hex` permiten filtrar especies raras y hexágonos con poca riqueza, respectivamente. Al comenzar el análisis conviene usar `1` en ambos argumentos para construir la matriz de comunidad más completa posible. Posteriormente puedes evaluar filtros más restrictivos, por ejemplo especies presentes en ≥3 H3 o hexágonos con ≥5 especies, pero debes comprobar cuánto reducen la matriz y justificar su uso. No apliques estos umbrales automáticamente: un filtro aparentemente razonable puede dejar muy pocos H3 para realizar un NMDS u otros análisis multivariados. Reitero, dichos argumentos tal como están declarados en el ejemplo, no constituyen necesariamente los filtros finales para el análisis multivariado. Antes de un NMDS u otros análisis de composición puede ser conveniente eliminar especies extremadamente raras y H3 muy pobres, pero esta decisión dependerá mucho del objetivo y de las preguntas. Como punto de partida, puede evaluarse posteriormente el efecto de exigir especies presentes en al menos 3 H3 y hexágonos con al menos 5 especies, pero esos umbrales deben justificarse y no aplicarse mecánicamente. Siempre debe informarse cuántas especies y cuántos H3 se eliminan.
+
+Puedes construir una matriz filtrada para comparar con la completa. Por ejemplo:
+
+```{r}
+mc_filtrada <- generar_matriz_comunidad(
+  reg,
+  min_hex_especie = 3,
+  min_especies_hex = 5,
+  col_hex = "hex_id",
+  col_especie = "especie"
+)
+
+dim(mc_filtrada)
+```
+
+Compara con la primera, y decide qué valores colocar en los argumentos `min_hex_especie` y `min_especies_hex`.
+
+# 3. Auditoría básica
+
+```{r auditoria}
+# Registros correspondientes a la matriz de comunidad definitiva
+reg_analitico <- reg |>
+  filter(
+    hex_id %in% rownames(mc),
+    especie %in% colnames(mc)
+  )
+
+# Comparación entre el pack original y el conjunto analítico
+auditoria <- tibble::tibble(
+  conjunto = c(
+    "Pack original",
+    "Conjunto analítico"
+  ),
+  registros = c(
+    nrow(reg),
+    nrow(reg_analitico)
+  ),
+  especies = c(
+    n_distinct(reg$especie),
+    ncol(mc)
+  ),
+  hexagonos = c(
+    n_distinct(reg$hex_id),
+    nrow(mc)
+  )
+)
+
+auditoria
+
+por_hex <- reg_analitico |>
+  count(hex_id, name = "n_registros") |>
+  right_join(
+    tibble::tibble(
+      hex_id = rownames(mc),
+      riqueza = as.integer(rowSums(mc))
+    ),
+    by = "hex_id"
+  )
+```
+
+# 4. Elegir variables ambientales
+
+No copies esta selección sin pensar. Elige variables que respondan a tu pregunta y documenta significado/unidades.
+
+```{r variables}
+vars <- c(
+  "WCL bio01 Annual mean temperature",
+  "WCL bio12 Annual precipitation",
+  "CGIAR-ELE mean",
+  "G90 Slope",
+  "ESA Trees",
+  "ESA Cropland",
+  "ESA Built-up",
+  "GHH shannon_1km"
+)
+
+ma <- alinear_ambiente(h3, mc, vars)
+summary(ma)
+cor(ma, use = "pairwise.complete.obs")
+```
+
+
+# 5. NMDS + ambiente
+
+Antes de realizar el NMDS, examina la estructura de la matriz de comunidad. Una matriz con muy pocos H3, muchos H3 con pocas especies, muchas especies presentes en un único H3 o una proporción elevada de pares de H3 sin especies compartidas puede producir una ordenación poco informativa o degenerada.
+
+En particular, una distancia de Jaccard igual a 1 indica que dos H3 **no comparten ninguna especie**. Si esto ocurre en una proporción elevada de los pares de H3, debes considerar si conviene filtrar especies muy raras o H3 con muy pocas especies antes de realizar el NMDS.
+
+```{r diagnostico-matriz-comunidad}
+# Dimensiones y riqueza/frecuencia
+n_hex <- nrow(mc)
+n_especies <- ncol(mc)
+
+riqueza_hex <- rowSums(mc)
+frecuencia_especies <- colSums(mc)
+
+# Distancias de Jaccard entre H3
+d_jaccard <- vegan::vegdist(
+  mc,
+  method = "jaccard",
+  binary = TRUE
+)
+
+prop_pares_sin_compartir <- mean(as.vector(d_jaccard) == 1)
+
+# Resumen diagnóstico
+diagnostico_mc <- tibble::tibble(
+  Indicador = c(
+    "Número de H3",
+    "Número de especies",
+    "Mediana de especies por H3",
+    "Mínimo de especies por H3",
+    "Especies presentes en un solo H3",
+    "Proporción de especies presentes en un solo H3",
+    "Proporción de pares de H3 sin especies compartidas"
+  ),
+  Valor = c(
+    n_hex,
+    n_especies,
+    median(riqueza_hex),
+    min(riqueza_hex),
+    sum(frecuencia_especies == 1),
+    mean(frecuencia_especies == 1),
+    prop_pares_sin_compartir
+  )
+)
+
+diagnostico_mc
+```
+
+Observa especialmente:
+
+- cuántos H3 y especies contiene la matriz;
+- cuántas especies tiene típicamente cada H3;
+- cuántas especies aparecen en un único H3;
+- qué proporción de pares de H3 no comparte ninguna especie.
+
+Los valores `min_hex_especie = 1` y `min_especies_hex = 1` utilizados inicialmente permiten conservar la matriz más completa posible. **Esto no significa que la matriz completa sea necesariamente la más apropiada para el NMDS.**
+
+Si observas muchas especies extremadamente raras, H3 con muy pocas especies o una proporción elevada de pares sin especies compartidas, prueba filtros progresivos al volver a ejecutar `generar_matriz_comunidad()`. Por ejemplo, puedes evaluar `min_hex_especie = 2` o aumentar moderadamente `min_especies_hex`. Compara siempre las dimensiones y este diagnóstico antes y después del filtrado.
+
+**No existe un umbral universal que debas alcanzar.** No filtres hasta obtener un resultado estadístico aparentemente bueno. El criterio debe ser conservar suficiente información biológica y suficientes H3 para el análisis, reduciendo al mismo tiempo la dispersión extrema causada por especies muy raras o unidades con información florística muy escasa. Registra y justifica en el manuscrito cualquier filtro que decidas aplicar.
+
+**Si decides cambiar los filtros de la matriz de comunidad**, vuelve al bloque donde se genera `mc`, modifica de forma razonada `min_hex_especie` y/o `min_especies_hex` y ejecútalo nuevamente. A continuación, **vuelve a ejecutar también el bloque que genera `ma` mediante `alinear_ambiente()`**, porque la matriz ambiental debe contener exactamente los mismos H3, y en el mismo orden, que la nueva matriz de comunidad. Después, regresa a esta sección, repite el diagnóstico y, si la matriz resultante es adecuada, ejecuta el NMDS. No es necesario copiar ni duplicar esos bloques de código.
+
+Sólo después de evaluar la matriz realiza el NMDS.
+
+```{r nmds}
+nmds <- metaMDS(
+  mc,
+  distance = "jaccard",
+  binary = TRUE,
+  k = 2,
+  trymax = 100,
+  trace = FALSE
+)
+
+nmds$stress
+stressplot(nmds)
+
+ma_z <- as.data.frame(scale(ma))
+fit_env <- envfit(nmds, ma_z, permutations = 999, na.rm = TRUE)
+fit_env
+```
+
+Y a continuación el gráfico de ordenación (*biplot*)
+
+> **Nota**. Las posiciones de las especies pueden añadirse al NMDS mediante sus nombres abreviados. Si la matriz contiene muchas especies, un biplot con todas las etiquetas puede resultar ilegible. En ese caso, selecciona para la figura final un subconjunto justificable de especies —por ejemplo, las de mayor frecuencia entre H3—, sin alterar la matriz utilizada para calcular el NMDS. La selección afecta únicamente a las etiquetas mostradas, no a la ordenación. También podría elegir una matriz de comunidad más resumida y consistente, ajustando los parámetros `min_hex_especie` y `min_especies_hex` de la función `generar_matriz_comunidad` en el bloque correspondiente al incio del cuaderno.
+
+```{r nmds-biplot}
+# Nombres abreviados de las especies
+etiquetas_sp <- abreviar_especies(colnames(mc))
+
+# Biplot vacío
+plot(
+  nmds,
+  type = "n",
+  display = "sites"
+)
+
+# H3
+points(
+  nmds,
+  display = "sites",
+  pch = 19,
+  cex = 0.7
+)
+
+# Especies, intentando reducir el solapamiento de etiquetas
+vegan::orditorp(
+  nmds,
+  display = "species",
+  labels = etiquetas_sp,
+  cex = 0.65
+)
+
+# Variables ambientales significativas
+plot(
+  fit_env,
+  p.max = 0.05,
+  add = TRUE
+)
+```
+
+Puedes repetir este proceso de forma progresiva si fuera necesario, comparando siempre las dimensiones y los indicadores diagnósticos de las matrices obtenidas. **No pruebes filtros únicamente hasta conseguir un NMDS "bonito" o un *stress* bajo**: conserva la decisión que tenga una justificación ecológica y metodológica razonable y documéntala en el manuscrito. Sólo después de evaluar la matriz realiza el NMDS.
+
+Como verás, en este cuaderno no corregí el NMDS y lo dejé tal cual resultó de la matriz de comunidad completa.
+
+# 6. Hábitat y PERMANOVA
+
+```{r permanova}
+hab <- h3 |>
+  st_drop_geometry() |>
+  select(hex_id, habitat_esa) |>
+  filter(hex_id %in% rownames(mc)) |>
+  arrange(match(hex_id, rownames(mc)))
+
+stopifnot(identical(hab$hex_id, rownames(mc)))
+
+d <- vegdist(mc, method = "jaccard", binary = TRUE)
+
+# Antes de PERMANOVA: revisar tamaños de grupo.
+table(hab$habitat_esa)
+
+bd <- betadisper(d, group = hab$habitat_esa)
+anova(bd)
+permutest(bd, permutations = 999)
+
+adonis2(d ~ habitat_esa, data = hab, permutations = 999)
+```
+
+# 7. Regresión de riqueza con intensidad de registro
+
+```{r regresion}
+datos_modelo <- por_hex |>
+  left_join(st_drop_geometry(h3) |> select(hex_id, all_of(vars)), by = "hex_id")
+
+# Ejemplo: usa POCOS predictores no redundantes.
+m0 <- glm(
+  riqueza ~ log1p(n_registros) + `CGIAR-ELE mean` + `ESA Trees`,
+  data = datos_modelo,
+  family = poisson()
+)
+
+# Diagnóstico simple de sobredispersión.
+dispersion <- sum(residuals(m0, type = "pearson")^2) / df.residual(m0)
+dispersion
+
+# Si la sobredispersión es clara, una alternativa:
+m_nb <- MASS::glm.nb(
+  riqueza ~ log1p(n_registros) + `CGIAR-ELE mean` + `ESA Trees`,
+  data = datos_modelo
+)
+summary(m_nb)
+```
+
+# 8. Especies asociadas a hábitat
+
+```{r indval}
+# Sólo si los grupos tienen replicación suficiente.
+ind <- multipatt(
+  mc,
+  cluster = hab$habitat_esa,
+  func = "IndVal.g",
+  control = how(nperm = 999)
+)
+summary(ind, alpha = 0.05, indvalcomp = TRUE)
+```
+
+# 9. Sensibilidad
+
+Repite al menos una parte importante del análisis con otro filtro razonable de especies/hexágonos y comprueba si las conclusiones generales cambian.
+
+# 10. Sesión
+
+```{r session-info}
+sessionInfo()
+```
