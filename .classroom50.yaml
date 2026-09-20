@@ -1,0 +1,12 @@
+schema: "classroom50/repo-config/v1"
+classroom: "geo131-202602"
+assignment: "pa02-medio-fisico-biodiversidad"
+owner:
+  username: "Heriberto369"
+  id: 318386209
+  accepted_at: "2026-09-20T01:16:35Z"
+source:
+  owner: "biogeografia-202602"
+  owner_id: 318275519
+  repo: "medio-fisico-ambiente-biodiversidad-municipio-dominicano"
+  branch: "main"
