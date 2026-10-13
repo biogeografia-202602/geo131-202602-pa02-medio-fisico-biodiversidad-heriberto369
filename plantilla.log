@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.30)  11 SEP 2026 21:22
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.30)  27 SEP 2026 23:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -216,7 +216,13 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1372.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1373.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1374.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1375.
-) (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 2016/06/17 v3.0m Driver-dependent file (DPC,SPQR)
+) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/svgnam.def
+File: svgnam.def 2021/10/31 v2.13 Predefined colors according to SVG 1.1 (UK)
+) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/x11nam.def
+File: x11nam.def 2021/10/31 v2.13 Predefined colors according to Unix/X11 (UK)
+)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
 Package: pgfcore 2021/05/15 v3.1.9a (3.1.9a)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/shar
 e/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (/usr/share/texl
@@ -775,62 +781,50 @@ Package microtype Info: Loading configuration file microtype.cfg.
 File: microtype.cfg 2021/12/10 v3.0b microtype main configuration file (RS)
 )) (/usr/share/texlive/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
-) (/usr/share/texlive/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
-Package: fancyvrb 2021/12/21 4.1b verbatim text (tvz,hv)
-\FV@CodeLineNo=\count347
-\FV@InFile=\read3
-\FV@TabBox=\box70
-\c@FancyVerbLine=\count348
-\FV@StepNumber=\count349
-\FV@OutFile=\write6
-) (/usr/share/texlive/texmf-dist/tex/latex/framed/framed.sty
-Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
-\OuterFrameSep=\skip85
-\fb@frw=\dimen298
-\fb@frh=\dimen299
-\FrameRule=\dimen300
-\FrameSep=\dimen301
 ) (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
-\LTleft=\skip86
-\LTright=\skip87
-\LTpre=\skip88
-\LTpost=\skip89
-\LTchunksize=\count350
-\LTcapwidth=\dimen302
-\LT@head=\box71
-\LT@firsthead=\box72
-\LT@foot=\box73
-\LT@lastfoot=\box74
-\LT@gbox=\box75
-\LT@cols=\count351
-\LT@rows=\count352
-\c@LT@tables=\count353
-\c@LT@chunks=\count354
+\LTleft=\skip85
+\LTright=\skip86
+\LTpre=\skip87
+\LTpost=\skip88
+\LTchunksize=\count347
+\LTcapwidth=\dimen298
+\LT@head=\box70
+\LT@firsthead=\box71
+\LT@foot=\box72
+\LT@lastfoot=\box73
+\LT@gbox=\box74
+\LT@cols=\count348
+\LT@rows=\count349
+\c@LT@tables=\count350
+\c@LT@chunks=\count351
 \LT@p@ftn=\toks38
 ) (/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
 Package: array 2021/10/04 v2.5f Tabular extension package (FMi)
-\col@sep=\dimen303
-\ar@mcellbox=\box76
-\extrarowheight=\dimen304
+\col@sep=\dimen299
+\ar@mcellbox=\box75
+\extrarowheight=\dimen300
 \NC@list=\toks39
-\extratabsurround=\skip90
-\backup@length=\skip91
-\ar@cellbox=\box77
+\extratabsurround=\skip89
+\backup@length=\skip90
+\ar@cellbox=\box76
 ) (/usr/share/texlive/texmf-dist/tex/latex/footnotehyper/footnotehyper.sty
 Package: footnotehyper 2021/08/13 v1.1e hyperref aware footnote.sty (JFB)
-\FNH@notes=\box78
-\FNH@width=\dimen305
+\FNH@notes=\box77
+\FNH@width=\dimen301
 \FNH@toks=\toks40
-) (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
+)
+\cslhangindent=\skip91
+\csllabelwidth=\skip92
+(/usr/share/texlive/texmf-dist/tex/generic/babel/babel.sty
 Package: babel 2022/01/26 3.70 The Babel package
-\babel@savecnt=\count355
-\U@D=\dimen306
+\babel@savecnt=\count352
+\U@D=\dimen302
 \l@unhyphenated=\language87
 (/usr/share/texlive/texmf-dist/tex/generic/babel/xebabel.def (/usr/share/texliv
 e/texmf-dist/tex/generic/babel/txtbabel.def))
-\bbl@readstream=\read4
-\bbl@dirlevel=\count356
+\bbl@readstream=\read3
+\bbl@dirlevel=\count353
 Package babel Info: You haven't specified a language. I'll use 'nil'
 (babel)             as the main language. Reported on input line 4299.
 (/usr/share/texlive/texmf-dist/tex/generic/babel/nil.ldf
@@ -840,17 +834,33 @@ Language: nil 2022/01/26 3.70 Nil language
 \everypar=\toks41
 (/usr/share/texlive/texmf-dist/tex/generic/babel/locale/es/babel-spanish.tex)
 Package babel Info: Importing data for spanish
-(babel)             from babel-es.ini. Reported on input line 113.
+(babel)             from babel-es.ini. Reported on input line 107.
 Package babel Info: Hyphen rules for 'spanish' set to \l@spanish
-(babel)             (\language55). Reported on input line 113.
+(babel)             (\language55). Reported on input line 107.
 
 Class apa7 Warning: Deprecated: see documentation for \authorsaffiliations on i
-nput line 119.
+nput line 112.
 
-\c@NumberOfAffiliations=\count357
-(/usr/share/texlive/texmf-dist/tex/latex/orcidlink/orcidlink.sty
+\c@NumberOfAffiliations=\count354
+(/usr/share/texlive/texmf-dist/tex/latex/ragged2e/ragged2e.sty
+Package: ragged2e 2021/12/15 v3.1 ragged2e Package
+\CenteringLeftskip=\skip93
+\RaggedLeftLeftskip=\skip94
+\RaggedRightLeftskip=\skip95
+\CenteringRightskip=\skip96
+\RaggedLeftRightskip=\skip97
+\RaggedRightRightskip=\skip98
+\CenteringParfillskip=\skip99
+\RaggedLeftParfillskip=\skip100
+\RaggedRightParfillskip=\skip101
+\JustifyingParfillskip=\skip102
+\CenteringParindent=\skip103
+\RaggedLeftParindent=\skip104
+\RaggedRightParindent=\skip105
+\JustifyingParindent=\skip106
+) (/usr/share/texlive/texmf-dist/tex/latex/orcidlink/orcidlink.sty
 Package: orcidlink 2021/06/11 v1.0.4 Linked ORCiD logo macro package
-\@curXheight=\skip92
+\@curXheight=\skip107
 ) (/usr/share/texlive/texmf-dist/tex/latex/nowidow/nowidow.sty
 Package: nowidow 2011/09/20 1.0 Easily prevent widows and orphans
 Package: nowidow 
@@ -866,33 +876,33 @@ Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed) + inter
 mediate FMi
 (/usr/share/texlive/texmf-dist/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box79
-\sift@deathcycles=\count358
-\@vwid@loff=\dimen307
-\@vwid@roff=\dimen308
+\@vwid@box=\box78
+\sift@deathcycles=\count355
+\@vwid@loff=\dimen303
+\@vwid@roff=\dimen304
 )
-\c@taburow=\count359
-\tabu@nbcols=\count360
-\tabu@cnt=\count361
-\tabu@Xcol=\count362
-\tabu@alloc=\count363
-\tabu@nested=\count364
-\tabu@target=\dimen309
-\tabu@spreadtarget=\dimen310
-\tabu@naturalX=\dimen311
-\tabucolX=\dimen312
-\tabu@Xsum=\dimen313
-\extrarowdepth=\dimen314
-\abovetabulinesep=\dimen315
-\belowtabulinesep=\dimen316
-\tabustrutrule=\dimen317
+\c@taburow=\count356
+\tabu@nbcols=\count357
+\tabu@cnt=\count358
+\tabu@Xcol=\count359
+\tabu@alloc=\count360
+\tabu@nested=\count361
+\tabu@target=\dimen305
+\tabu@spreadtarget=\dimen306
+\tabu@naturalX=\dimen307
+\tabucolX=\dimen308
+\tabu@Xsum=\dimen309
+\extrarowdepth=\dimen310
+\abovetabulinesep=\dimen311
+\belowtabulinesep=\dimen312
+\tabustrutrule=\dimen313
 \tabu@thebody=\toks42
 \tabu@footnotes=\toks43
-\tabu@box=\box80
-\tabu@arstrutbox=\box81
-\tabu@hleads=\box82
-\tabu@vleads=\box83
-\tabu@cellskip=\skip93
+\tabu@box=\box79
+\tabu@arstrutbox=\box80
+\tabu@hleads=\box81
+\tabu@vleads=\box82
+\tabu@cellskip=\skip108
 ) (/usr/share/texlive/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 ) (/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
@@ -901,56 +911,64 @@ Package: setspace 2011/12/19 v6.7a set line spacing
 Package: fvextra 2019/02/04 v1.4 fvextra - extensions and patches for fancyvrb
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+) (/usr/share/texlive/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2021/12/21 4.1b verbatim text (tvz,hv)
+\FV@CodeLineNo=\count362
+\FV@InFile=\read4
+\FV@TabBox=\box83
+\c@FancyVerbLine=\count363
+\FV@StepNumber=\count364
+\FV@OutFile=\write6
 ) (/usr/share/texlive/texmf-dist/tex/latex/lineno/lineno.sty
 Package: lineno 2005/11/02 line numbers on paragraphs v4.41
 Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
 \linenopenalty=\count365
 \output=\toks44
 \linenoprevgraf=\count366
-\linenumbersep=\dimen318
-\linenumberwidth=\dimen319
+\linenumbersep=\dimen314
+\linenumberwidth=\dimen315
 \c@linenumber=\count367
 \c@pagewiselinenumber=\count368
 \c@LN@truepage=\count369
 \c@internallinenumber=\count370
 \c@internallinenumbers=\count371
-\quotelinenumbersep=\dimen320
-\bframerule=\dimen321
-\bframesep=\dimen322
+\quotelinenumbersep=\dimen316
+\bframerule=\dimen317
+\bframesep=\dimen318
 \bframebox=\box84
 LaTeX Info: Redefining \\ on input line 3056.
 )
 \c@FV@TrueTabGroupLevel=\count372
 \c@FV@TrueTabCounter=\count373
 \FV@TabBox@Group=\box85
-\FV@TmpLength=\skip94
+\FV@TmpLength=\skip109
 \c@FV@HighlightLinesStart=\count374
 \c@FV@HighlightLinesStop=\count375
 \FV@LoopCount=\count376
 \FV@NCharsBox=\box86
-\FV@BreakIndent=\dimen323
+\FV@BreakIndent=\dimen319
 \FV@BreakIndentNChars=\count377
-\FV@BreakSymbolSepLeft=\dimen324
+\FV@BreakSymbolSepLeft=\dimen320
 \FV@BreakSymbolSepLeftNChars=\count378
-\FV@BreakSymbolSepRight=\dimen325
+\FV@BreakSymbolSepRight=\dimen321
 \FV@BreakSymbolSepRightNChars=\count379
-\FV@BreakSymbolIndentLeft=\dimen326
+\FV@BreakSymbolIndentLeft=\dimen322
 \FV@BreakSymbolIndentLeftNChars=\count380
-\FV@BreakSymbolIndentRight=\dimen327
+\FV@BreakSymbolIndentRight=\dimen323
 \FV@BreakSymbolIndentRightNChars=\count381
 \c@FancyVerbLineBreakLast=\count382
 \FV@LineBox=\box87
 \FV@LineIndentBox=\box88
-\FV@LineWidth=\dimen328
+\FV@LineWidth=\dimen324
 ) (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
-\multirow@colwidth=\skip95
+\multirow@colwidth=\skip110
 \multirow@cntb=\count383
-\multirow@dima=\skip96
-\bigstrutjot=\dimen329
+\multirow@dima=\skip111
+\bigstrutjot=\dimen325
 ) (/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
-\wrapoverhang=\dimen330
-\WF@size=\dimen331
+\wrapoverhang=\dimen326
+\WF@size=\dimen327
 \c@WF@wrappedlines=\count384
 \WF@box=\box89
 \WF@everypar=\toks45
@@ -958,7 +976,7 @@ Package: wrapfig 2003/01/31  v 3.6
 ) (/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
 \everycr=\toks46
-\minrowclearance=\skip97
+\minrowclearance=\skip112
 ) (/usr/share/texlive/texmf-dist/tex/latex/threeparttablex/threeparttablex.sty
 Package: threeparttablex 2013/07/23 v0.3 by daleif
 (/usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty
@@ -966,21 +984,21 @@ Package: environ 2014/05/04 v0.3 A new way to define environments
 (/usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
-\TPTL@width=\skip98
+\TPTL@width=\skip113
 ) (/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty
 \UL@box=\box90
 \UL@hyphenbox=\box91
-\UL@skip=\skip99
+\UL@skip=\skip114
 \UL@hook=\toks47
-\UL@height=\dimen332
+\UL@height=\dimen328
 \UL@pe=\count385
-\UL@pixel=\dimen333
+\UL@pixel=\dimen329
 \ULC@box=\box92
 Package: ulem 2019/11/18
-\ULdepth=\dimen334
+\ULdepth=\dimen330
 ) (/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen335
+\rotheadsize=\dimen331
 \c@nlinenum=\count386
 \TeXr@lab=\toks48
 ) (/usr/share/texlive/texmf-dist/tex/latex/bookmark/bookmark.sty
@@ -989,31 +1007,32 @@ Package: bookmark 2020-11-06 v1.29 PDF bookmarks (HO)
 File: bkm-dvipdfm.def 2020-11-06 v1.29 bookmark driver for dvipdfm (HO)
 \BKM@id=\count387
 ))
+Package hyperref Info: Option `colorlinks' set `true' on input line 156.
 \c@NumberOfAuthors=\count388
 \c@NumberOfSuperscripts=\count389
 (./plantilla.aux)
 \openout1 = `plantilla.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 165.
-LaTeX Font Info:    ... okay on input line 165.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 162.
+LaTeX Font Info:    ... okay on input line 162.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -1048,7 +1067,7 @@ LaTeX Font Info:    ... okay on input line 165.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 165.
+Package hyperref Info: Link coloring ON on input line 162.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1058,9 +1077,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count390
 )
-LaTeX Info: Redefining \ref on input line 165.
-LaTeX Info: Redefining \pageref on input line 165.
-LaTeX Info: Redefining \nameref on input line 165.
+LaTeX Info: Redefining \ref on input line 162.
+LaTeX Info: Redefining \pageref on input line 162.
+LaTeX Info: Redefining \nameref on input line 162.
 (/usr/share/texlive/texmf-dist/tex/latex/apa7/config/APA7spanish.txt
 File: APA7spanish.txt 2021/08/08 v1.00 apa7 configuration for Spanish
 )
@@ -1073,19 +1092,19 @@ Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
 Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 165.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 165.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 165.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 165.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 165.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 165.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 162.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 165.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 162.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -1114,7 +1133,7 @@ pt=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 165.
+(Font)              scaled to size 12.0pt on input line 162.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -1153,18 +1172,18 @@ pt=math;language=dflt;"
 (fontspec)             - 'bold small caps'  (b/sc) with NFSS spec.: 
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 165.
+(Font)              scaled to size 12.0pt on input line 162.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 165.
+(Font)              `operators' in the math version `normal' on input line 162.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 165.
+ line 162.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 165.
+(Font)              `operators' in the math version `bold' on input line 162.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 165.
+t line 162.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -1251,15 +1270,15 @@ t=math;language=dflt;"
 (fontspec)             \fontdimen 21\font =0pt\relax 
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 165.
+(Font)              `symbols' in the math version `normal' on input line 162.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 165.
+t line 162.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 165.
+(Font)              `symbols' in the math version `bold' on input line 162.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 165.
+t line 162.
 
 Package fontspec Info: latinmodern-math scale = 0.9999970497384594.
 
@@ -1329,22 +1348,22 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-65.
+62.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 165.
+t line 162.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 165
+(Font)              `largesymbols' in the math version `bold' on input line 162
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 165.
-LaTeX Info: Redefining \microtypecontext on input line 165.
-Package microtype Info: Applying patch `item' on input line 165.
-Package microtype Info: Applying patch `toc' on input line 165.
-Package microtype Info: Applying patch `eqnum' on input line 165.
+t line 162.
+LaTeX Info: Redefining \microtypecontext on input line 162.
+Package microtype Info: Applying patch `item' on input line 162.
+Package microtype Info: Applying patch `toc' on input line 162.
+Package microtype Info: Applying patch `eqnum' on input line 162.
 
-Package microtype Warning: Unable to apply patch `footnote' on input line 165.
+Package microtype Warning: Unable to apply patch `footnote' on input line 162.
 
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -1356,25 +1375,12 @@ File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
+Class apa7 Warning: Abstract not defined.
 
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
+Class apa7 Info: Keywords not defined on input line 163.
 [1
 
-]
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[2] (./plantilla.toc
+] (./plantilla.toc
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
 (Font)              scaled to size 8.4pt on input line 4.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
@@ -1417,104 +1423,63 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 4.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[3])
+))
 \tf@toc=\write7
 \openout7 = `plantilla.toc'.
 
 
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
+Overfull \hbox (0.264pt too wide) in paragraph at lines 172--173
+[]\TU/lmr/m/n/12 El análisis de la distribución espacial de la biodiversidad a 
+escalas regionales constituye
+ []
 
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[4]
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[5]
-File: README_files/figure-gfm/mapa-municipios-candidatos-1.png Graphic file (ty
-pe bmp)
-<README_files/figure-gfm/mapa-municipios-candidatos-1.png>
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[6]
-File: plantilla_files/figure-latex/figura-codigo-ejemplo-1.pdf Graphic file (ty
-pe pdf)
-<use plantilla_files/figure-latex/figura-codigo-ejemplo-1.pdf>
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
+[2] [3] [4] [5] [6]
+File: plantilla_files/figure-latex/figura-nmds-1.pdf Graphic file (type pdf)
+<use plantilla_files/figure-latex/figura-nmds-1.pdf>
 [7]
+File: plantilla_files/figure-latex/figura-riqueza-esfuerzo-1.pdf Graphic file (
+type pdf)
+<use plantilla_files/figure-latex/figura-riqueza-esfuerzo-1.pdf>
+[8] [9] [10] [11] [12]
+Overfull \hbox (6.18901pt too wide) in paragraph at lines 310--311
+\TU/lmr/m/n/12 (\TU/lmtt/m/n/12 procesamiento-azua\TU/lmr/m/n/12 , \TU/lmtt/m/n
+/12 tabla-envfit\TU/lmr/m/n/12 , \TU/lmtt/m/n/12 figura-nmds\TU/lmr/m/n/12 , \T
+U/lmtt/m/n/12 figura-riqueza-esfuerzo\TU/lmr/m/n/12 )
+ []
 
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
 
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
+Overfull \hbox (52.14401pt too wide) in paragraph at lines 318--319
+[]\TU/lmr/m/n/12 El flujo analítico computacional, el archivo fuente estructura
+do en RMarkdown (\TU/lmtt/m/n/12 plantilla.Rmd\TU/lmr/m/n/12 )
+ []
 
-[8]
+[13]
+Overfull \hbox (44.48102pt too wide) in paragraph at lines 320--323
+\TU/lmtt/m/n/12 050201_azua\TU/lmr/m/n/12 , específicamente: 1. La capa espacia
+l en formato GeoPackage \TU/lmtt/m/n/12 h3_ambiental_azua.gpkg\TU/lmr/m/n/12 ,
+ []
 
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
 
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
+Overfull \hbox (2.67302pt too wide) in paragraph at lines 320--323
+\TU/lmr/m/n/12 tura de dosel de Copernicus Global Land Service. 2. El archivo t
+abular \TU/lmtt/m/n/12 gbif_flora_azua.csv\TU/lmr/m/n/12 ,
+ []
 
-[9] AED endfloat: Processing end Figures and Tables
 
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
+Overfull \hbox (23.00102pt too wide) in paragraph at lines 324--325
+\TU/lmtt/m/n/12 knitr\TU/lmr/m/n/12 , \TU/lmtt/m/n/12 kableExtra\TU/lmr/m/n/12 
+), se encuentra registrada en el archivo anexo \TU/lmtt/m/n/12 session_info_man
+uscript.txt\TU/lmr/m/n/12 . 
+ []
 
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[10]
-
-Package fancyhdr Warning: \headheight is too small (15.2pt): 
-(fancyhdr)                Make it at least 15.21004pt, for example:
-(fancyhdr)                \setlength{\headheight}{15.21004pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-0.01004pt}.
-
-[11] (./plantilla.aux) ) 
+[14] AED endfloat: Processing end Figures and Tables [15] (./plantilla.aux) ) 
 Here is how much of TeX's memory you used:
- 35428 strings out of 476191
- 691412 string characters out of 5812072
- 1144493 words of memory out of 5000000
- 55525 multiletter control sequences out of 15000+600000
- 486675 words of font info for 69 fonts, out of 8000000 for 9000
+ 35901 strings out of 476191
+ 699454 string characters out of 5812072
+ 1170289 words of memory out of 5000000
+ 55998 multiletter control sequences out of 15000+600000
+ 486659 words of font info for 67 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 99i,11n,121p,1006b,536s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,12n,121p,1320b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on plantilla.pdf (11 pages).
+Output written on plantilla.pdf (15 pages).

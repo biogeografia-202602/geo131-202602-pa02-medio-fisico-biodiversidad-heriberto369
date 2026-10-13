@@ -1,0 +1,295 @@
+---
+title: "Gradientes ambientales y composición florística en el municipio de Azua"
+subtitle: "Desacoplando la señal ecológica del sesgo de registro"
+author: "Heriberto Matos"
+date: "2026-09-27"
+output:
+  slidy_presentation:
+    footer: "Azua - Flora y Heterogeneidad Ambiental"
+    font_adjustment: 0
+bibliography: bibliografia.bib
+link-citations: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  dpi = 300,
+  fig.align = "center"
+)
+set.seed(99)
+
+library(tidyverse)
+library(sf)
+library(vegan)
+library(MASS)
+library(ggrepel)
+
+dir_azua   <- "datos_por_municipio/050201_azua"
+ruta_h3    <- file.path(dir_azua, "h3_ambiental_azua.gpkg")
+ruta_gbif  <- file.path(dir_azua, "gbif_flora_azua.csv")
+
+h3_sf      <- st_read(ruta_h3, quiet = TRUE)
+registros  <- read_csv(ruta_gbif, show_col_types = FALSE)
+
+col_spp <- if("species" %in% names(registros)) "species" else "scientificName"
+col_hex <- if("hex_id" %in% names(registros)) "hex_id" else names(registros)[grepl("h3|hex", names(registros), ignore.case = TRUE)][1]
+id_h3   <- if("hex_id" %in% names(h3_sf)) "hex_id" else names(h3_sf)[grepl("h3|hex", names(h3_sf), ignore.case = TRUE)][1]
+
+comunidad_raw <- registros %>%
+  filter(!is.na(.data[[col_spp]]), .data[[col_spp]] != "", !is.na(.data[[col_hex]])) %>%
+  distinct(.data[[col_hex]], .data[[col_spp]]) %>%
+  mutate(presencia = 1) %>%
+  pivot_wider(names_from = all_of(col_spp), values_from = presencia, values_fill = 0) %>%
+  column_to_rownames(col_hex)
+
+mat_com <- comunidad_raw[rowSums(comunidad_raw) >= 3, , drop = FALSE]
+mat_com <- mat_com[, colSums(mat_com) >= 2, drop = FALSE]
+mat_com <- mat_com[rowSums(mat_com) > 0, , drop = FALSE]
+
+stats_h3 <- registros %>%
+  group_by(.data[[col_hex]]) %>%
+  summarise(
+    n_registros = n(),
+    riqueza_obs = n_distinct(.data[[col_spp]]),
+    .groups = "drop"
+  )
+
+h3_analisis <- h3_sf %>%
+  filter(.data[[id_h3]] %in% rownames(mat_com)) %>%
+  left_join(stats_h3, by = setNames(col_hex, id_h3))
+
+h3_analisis <- h3_analisis[match(rownames(mat_com), h3_analisis[[id_h3]]), ]
+
+mat_amb_sel <- h3_analisis %>%
+  st_drop_geometry() %>%
+  dplyr::select(
+    Precipitacion = `WCL.bio12.Annual.precipitation`,
+    Temperatura   = `WCL.bio01.Annual.mean.temperature`,
+    Pendiente     = `G90.Slope`,
+    TPI           = `G90.Topographic.Position.Index`,
+    Cobertura     = `ESA.Trees`
+  )
+
+set.seed(2026)
+nmds_res <- vegan::metaMDS(mat_com, distance = "jaccard", k = 2, autotransform = FALSE, trymax = 100, trace = FALSE)
+estres_valor <- round(nmds_res$stress, 3)
+
+fit_env <- vegan::envfit(nmds_res, mat_amb_sel, permutations = 999)
+vectores_coords <- as.data.frame(fit_env$vectors$arrows * sqrt(fit_env$vectors$r))
+vectores_coords$Variable <- rownames(vectores_coords)
+
+datos_reg <- h3_analisis %>%
+  st_drop_geometry() %>%
+  bind_cols(mat_amb_sel) %>%
+  mutate(log_esfuerzo = log1p(n_registros))
+
+mod_poisson <- glm(riqueza_obs ~ log_esfuerzo + scale(Pendiente) + scale(Precipitacion),
+                   data = datos_reg, family = poisson)
+disp_phi <- sum(residuals(mod_poisson, type = "pearson")^2) / df.residual(mod_poisson)
+
+mod_final <- if(disp_phi > 1.5) {
+  glm(riqueza_obs ~ log_esfuerzo + scale(Pendiente) + scale(Precipitacion),
+      data = datos_reg, family = quasipoisson)
+} else {
+  mod_poisson
+}
+
+coef_esfuerzo <- round(summary(mod_final)$coefficients["log_esfuerzo", "Estimate"], 3)
+```
+<style>
+div.slide {
+  padding: 20px 40px !important;
+  font-family: Arial, sans-serif !important;
+}
+
+/* Portadas de sección intermedias (título solo al centro y más grande) */
+.seccion-slide {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 80vh !important;
+  text-align: center !important;
+}
+
+.seccion-slide h1 {
+  font-size: 46pt !important;
+  color: #1b365d !important;
+  border-bottom: none !important;
+  margin: 0 !important;
+}
+
+/* Títulos normales de las diapositivas de contenido */
+div.slide h1 {
+  font-size: 24pt !important;
+  color: #1b365d !important;
+  margin-top: 5px !important;
+  margin-bottom: 15px !important;
+  border-bottom: 2px solid #1b365d !important;
+}
+
+/* Textos y listas */
+div.slide p, div.slide li {
+  font-size: 16pt !important;
+  line-height: 1.4 !important;
+  color: #2b2b2b !important;
+}
+
+div.slide ul {
+  display: block;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.slide-grafico p, .slide-grafico li {
+  font-size: 18px !important;
+  line-height: 1.3 !important;
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
+
+.slide-grafico ul {
+  margin-top: 6px !important;
+}
+</style>
+
+# Introducción {.seccion-slide}
+
+# Introducción
+
+- **Premisa teórica:** Gradientes ambientales actúan como **filtros fisiológicos** que estructuran el recambio vegetal [@legendre2012numerical].
+- **Escenario regional:** Valle de Azua bajo fuerte **déficit hídrico** por **sombra pluviométrica** (Cordillera Central y Sierra Martín García).
+- **Fisonomía vegetal:** Dominancia de **bosque seco subtropical** y **matorral xerofítico**, en transición abrupta con laderas premontañosas.
+- **Problemática de datos:** Repositorios abiertos (**GBIF**) con severas **asimetrías espaciales** por colectas oportunistas.
+- **Riesgo analítico:** Confundir la **accesibilidad vial** con centros intrínsecos de biodiversidad.
+
+# Marco y problemática
+
+- **Premisa biogeográfica:** Gradientes físicos estructuran el recambio y ensamblaje vegetal.
+- **Contexto regional:** Planicie semiárida de Azua bajo sombra pluviométrica vs. ecotonos premontañosos.
+- **Conflicto central:** Repositorios abiertos (**GBIF**) presentan severo **sesgo espacial oportunista**.
+- **Riesgo analítico:** Confundir accesibilidad vial con centros reales de riqueza biológica.
+
+# Preguntas e hipótesis
+
+- **Pregunta clave:** ¿Cuánto explica el ambiente el recambio florístico vs. el sesgo de registro?
+- **Hipótesis 1 (Composición):** Recambio condicionado por la **cobertura leñosa** y la **aridez térmica**.
+- **Hipótesis 2 (Riqueza):** Riqueza observada **sobredeterminada por el esfuerzo de colecta** acumulado.
+
+# Materiales y métodos {.seccion-slide}
+
+# Datos y preprocesamiento
+
+- **Área territorial:** Municipio de Azua (`050201_azua`).
+- **Unidad espacial:** Malla hexagonal discreta **H3 resolución 7** (~5.2 km² por celda).
+- **Registros botánicos:** Presencias primarias de flora vascular (GBIF).
+- **Filtrado comunitario:** Celdas con $\ge$ 3 especies y taxones en $\ge$ 2 hexágonos.
+- **Matriz resultante:** 29 hexágonos y 126 especies vasculares.
+
+# Métodos estadísticos
+
+- **NMDS (`vegan::metaMDS`):**
+  - Distancia **Jaccard** binaria ($k = 2$) [@legendre2012numerical].
+  - Ordenación no lineal de recambio taxonómico.
+- **Ajuste ambiental (`envfit`):**
+  - Vectores físicos con 999 permutaciones [@borcard2018numerical].
+- **GLM (Riqueza observada):**
+  - Familia **cuasi-Poisson** por sobredispersión ($\phi > 1.5$) [@venables2002modern].
+  - Predictor covariable: $\ln(\text{registros} + 1)$.
+
+# Evaluación de hábitats y dispersión
+
+- **Exploración categórica:** Asimetría muestral en bosque seco y matorral xerofítico.
+- **Riesgo estadístico:** Desbalance y dispersión multivariada heterogénea (`betadisper`).
+- **Decisión metodológica:** Descarte de **PERMANOVA** (`adonis2`) [@anderson2001new].
+- **Criterio analítico:** Enfoque exclusivo en gradientes continuos sobre el NMDS.
+  
+# Resultados {.seccion-slide}
+
+# Ordenación comunitaria: NMDS
+
+```{r nmds-plot, fig.width=6, fig.height=2.8, out.width="65%"}
+sitios_coords <- as.data.frame(vegan::scores(nmds_res, display = "sites"))
+
+ggplot() +
+  geom_point(data = sitios_coords, aes(x = NMDS1, y = NMDS2), color = "#1b365d", size = 3.2, alpha = 0.75) +
+  geom_segment(data = vectores_coords, aes(x = 0, y = 0, xend = NMDS1, yend = NMDS2),
+               arrow = arrow(length = unit(0.22, "cm")), color = "#b22222", linewidth = 0.9) +
+  geom_text_repel(data = vectores_coords, aes(x = NMDS1, y = NMDS2, label = Variable),
+                  color = "#b22222", fontface = "bold", size = 4.2) +
+  annotate("text", x = min(sitios_coords$NMDS1), y = max(sitios_coords$NMDS2),
+           label = paste("Estrés =", estres_valor), hjust = 0, vjust = 1, fontface = "italic", size = 4.5) +
+  labs(x = "Dimensión NMDS 1", y = "Dimensión NMDS 2") +
+  theme_bw(base_size = 12)
+```
+# Ajuste de vectores ambientales (envfit)
+
+```{r tabla-envfit-diapo}
+df_envfit_res <- data.frame(
+  Variable = rownames(fit_env$vectors$arrows),
+  r2       = round(fit_env$vectors$r, 3),
+  p_valor  = fit_env$vectors$pvals
+) %>% arrange(desc(r2))
+
+knitr::kable(df_envfit_res, col.names = c("Variable", "r²", "p-valor"))
+```
+
+- **Filtros principales:** **Cobertura arbórea** y **temperatura** rigen la segregación.
+- **Control secundario:** **Pendiente** y **TPI** diferencian llanura aluvial de laderas.
+
+- **Ajuste:** Convergencia con **estrés de `r estres_valor`** (representación bidimensional confiable).
+- **Estructuración:** Gradiente ordenado primordialmente por **cobertura arbórea** y **temperatura**.
+
+# Sesgo de muestreo vs. riqueza
+
+```{r esfuerzo-plot, fig.width=6, fig.height=2.8, out.width="65%"}
+ggplot(datos_reg, aes(x = n_registros, y = riqueza_obs)) +
+  geom_point(aes(size = Pendiente), color = "#1b365d", alpha = 0.75) +
+  geom_smooth(method = "glm", method.args = list(family = "quasipoisson"), 
+              formula = y ~ log(x + 1), color = "#b22222", se = TRUE, linetype = "solid") +
+  scale_x_log10() +
+  labs(
+    x = "Intensidad de registro (n_registros, escala logarítmica)",
+    y = "Riqueza observada de especies",
+    size = "Pendiente (G90)"
+  ) +
+  theme_bw(base_size = 12)
+```
+
+- **Efecto primario:** Intensidad de colecta dominante ($\beta = `r coef_esfuerzo`$, $p < 0.001$).
+- **Concentración:** Mayor riqueza asociada a proximidad vial (carretera Sánchez) y centros urbanos.
+
+# Discusión {.seccion-slide}
+
+# Señal ecológica vs. sesgo
+
+- **Beta diversidad real:** Jaccard y NMDS capturan la transición entre el matorral xerofítico y el bosque seco transicional.
+- **Alfa diversidad distorsionada:** Riqueza condicionada a la cercanía con vías de acceso principales.
+- **Escala H3 (Res. 7):** Promedia microtopografía y suaviza contrastes locales de suelo.
+- **Implicación:** Necesidad de modelar explícitamente el esfuerzo antes de emitir zonificaciones de conservación.
+
+# Conclusiones {.seccion-slide}
+
+# Conclusiones principales
+
+- **Composición florística:** Determinada por gradientes de **cobertura leñosa** y **estrés térmico**.
+- **Riqueza de especies:** Sobredeterminada por el **sesgo de muestreo oportunista** ($\beta = 1.037$).
+- **Validez metodológica:** Desacople exitoso entre señal comunitaria y artefacto de colecta.
+- **Recomendación:** Desaconsejado el uso directo de GBIF sin corrección de esfuerzo para la toma de decisiones.
+
+# Auditoría de IA y reproducibilidad
+
+- **Herramienta:** Asistencia de Google Gemini en código y modelado.
+- **Control humano sobre errores de la IA:**
+  1. *Esquema espacial:* Corrección de `G90.Slope` y `G90.Topographic.Position.Index` (se asumió `Elevacion`).
+  2. *Filtrado destructivo:* Rechazo de umbral rígido que vació la matriz ($0 \times 0$, error `'dist' cannot be all zero`).
+  3. *Etiquetas en knitr:* Saneamiento manual de colisiones en nombres de chunks.
+- **Reproducibilidad:** Entorno R v4.4.0 (`Ubuntu 22.04 LTS`) con librerías fijadas.
+
+# Literatura citada {.seccion-slide}
+
+# Referencias
+
+<div id="refs"></div>
