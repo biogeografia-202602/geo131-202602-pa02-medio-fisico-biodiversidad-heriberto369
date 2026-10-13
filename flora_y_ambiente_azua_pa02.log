@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.30)  10 OCT 2026 22:52
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2026.1.30)  13 OCT 2026 21:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1476,13 +1476,16 @@ Overfull \hbox (23.00102pt too wide) in paragraph at lines 337--338
 uscript.txt\TU/lmr/m/n/12 . 
  []
 
+File: flora_y_ambiente_azua_pa02_files/figure-latex/figura-nmds-3-vars-1.pdf Gr
+aphic file (type pdf)
+<use flora_y_ambiente_azua_pa02_files/figure-latex/figura-nmds-3-vars-1.pdf>
 [16] AED endfloat: Processing end Figures and Tables [17] (./flora_y_ambiente_a
 zua_pa02.aux) ) 
 Here is how much of TeX's memory you used:
- 35904 strings out of 476191
- 700107 string characters out of 5812072
- 1171344 words of memory out of 5000000
- 56000 multiletter control sequences out of 15000+600000
+ 35915 strings out of 476191
+ 700840 string characters out of 5812072
+ 1168573 words of memory out of 5000000
+ 56010 multiletter control sequences out of 15000+600000
  486667 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  99i,12n,121p,1624b,471s stack positions out of 5000i,500n,10000p,200000b,80000s
