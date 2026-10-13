@@ -117,6 +117,59 @@ por_hex <- reg_analitico |>
   )
 ```
 
+Mapa del número de registros de flora 
+
+```{r}
+# Unir el número de registros a la geometría H3
+h3_registros <- h3 |>
+  left_join(
+    por_hex |>
+      select(hex_id, n_registros),
+    by = "hex_id"
+  ) |>
+  mutate(
+    n_registros = replace_na(n_registros, 0L)
+  ) %>% 
+  filter(n_registros > 0)
+
+# Comprobación rápida
+summary(h3_registros$n_registros)
+
+# Mapa
+ggplot() +
+  geom_sf(
+    data = h3_registros,
+    aes(fill = n_registros),
+    color = "grey70",
+    linewidth = 0.15
+  ) +
+  geom_sf(
+    data = mun,
+    fill = NA,
+    color = "black",
+    linewidth = 0.6
+  ) +
+  scale_fill_viridis_c(
+    option = "C",
+    trans = "sqrt",
+    name = "Número de\nregistros"
+  ) +
+  coord_sf(datum = NA) +
+  labs(
+    title = paste("Registros de flora por hexágono H3 ·", nombre_mun),
+    subtitle = "Registros incluidos en el conjunto analítico",
+    caption = "Fuente: GBIF"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+
 # 4. Elegir variables ambientales
 
 No copies esta selección sin pensar. Elige variables que respondan a tu pregunta y documenta significado/unidades.
@@ -203,6 +256,66 @@ Si observas muchas especies extremadamente raras, H3 con muy pocas especies o un
 **Si decides cambiar los filtros de la matriz de comunidad**, vuelve al bloque donde se genera `mc`, modifica de forma razonada `min_hex_especie` y/o `min_especies_hex` y ejecútalo nuevamente. A continuación, **vuelve a ejecutar también el bloque que genera `ma` mediante `alinear_ambiente()`**, porque la matriz ambiental debe contener exactamente los mismos H3, y en el mismo orden, que la nueva matriz de comunidad. Después, regresa a esta sección, repite el diagnóstico y, si la matriz resultante es adecuada, ejecuta el NMDS. No es necesario copiar ni duplicar esos bloques de código.
 
 Sólo después de evaluar la matriz realiza el NMDS.
+
+Violines.
+
+```{r}
+# Preparar variables ambientales en formato largo
+ma_long <- ma |>
+  as.data.frame() |>
+  tibble::rownames_to_column("hex_id") |>
+  pivot_longer(
+    cols = -hex_id,
+    names_to = "variable",
+    values_to = "valor"
+  )
+
+# Violín + boxplot + jitter
+ggplot(
+  ma_long,
+  aes(x = "", y = valor)
+) +
+  geom_violin(
+    fill = "grey85",
+    color = "grey40",
+    linewidth = 0.4,
+    trim = FALSE
+  ) +
+  geom_boxplot(
+    width = 0.18,
+    fill = "white",
+    color = "black",
+    linewidth = 0.4,
+    outlier.shape = NA
+  ) +
+  geom_jitter(
+    width = 0.08,
+    height = 0,
+    alpha = 0.45,
+    size = 1.4
+  ) +
+  facet_wrap(
+    ~ variable,
+    scales = "free_y",
+    ncol = 4
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Distribución de las variables ambientales",
+    subtitle = "Violín, diagrama de caja y valores de los hexágonos H3"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(size = 9),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+
 
 ```{r nmds}
 nmds <- metaMDS(

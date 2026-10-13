@@ -1,0 +1,345 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  man,
+  floatsintext]{apa7}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{spanish}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\shorttitle{FLORA Y AMBIENTE EN AZUA}
+\affiliation{Universidad Autónoma de Santo Domingo (UASD)}
+\usepackage{ragged2e}
+\renewcommand{\raggedright}{\justifying}
+\usepackage{orcidlink}
+\usepackage[all]{nowidow}
+\usepackage{pdflscape}
+\renewcommand\spanishtablename{Tabla}
+\usepackage{xcolor}
+\usepackage{tabu}
+\usepackage{xurl}
+\usepackage{setspace}
+\usepackage{etoolbox}
+\usepackage{fvextra}
+\AtBeginEnvironment{Shaded}{\singlespacing\footnotesize}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\scriptsize,breaklines=true,breakanywhere=true,formatcom=\singlespacing}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Gradientes ambientales y composición florística en el municipio de Azua: desacoplando la señal ecológica del sesgo de registro},
+  pdfauthor={Heriberto Matos},
+  pdflang={es-ES},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Gradientes ambientales y composición florística en el municipio de Azua: desacoplando la señal ecológica del sesgo de registro}
+\author{Heriberto Matos}
+\date{2026-09-27}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\section{Introducción}\label{introducciuxf3n}
+
+El análisis de la distribución espacial de la biodiversidad a escalas regionales constituye uno de los pilares fundamentales de la biogeografía ecológica contemporánea. Tradicionalmente, se asume que los gradientes ambientales ---tales como la disponibilidad hídrica, el régimen térmico y la heterogeneidad topográfica--- actúan como filtros fisiológicos determinantes que configuran el recambio de especies (beta diversidad) y estructuran los ensamblajes de comunidades vegetales (\citeproc{ref-legendre2012numerical}{Legendre y Legendre, 2012}). En ambientes insulares del Caribe, como la isla de La Española, estas dinámicas se expresan con particular intensidad debido a marcados contrastes orográficos que dan lugar a regímenes climáticos divergentes en distancias geográficas reducidas.
+
+El municipio de Azua, situado en la región suroeste de la República Dominicana, ofrece un escenario bioclimático representativo para estudiar estos patrones. Dominado en gran parte de su territorio por la cuenca baja y el valle de Azua, el área se caracteriza por un marcado déficit hídrico producto del efecto de sombra pluviométrica ejercido por las estribaciones de la Cordillera Central y la Sierra de Martín García. Este régimen define formaciones de bosque seco subtropical y matorral xerofítico, intercaladas abruptamente con ecotonos de mayor elevación y humedad en sus bordes montañosos. En consecuencia, la variación fisiográfica y la cobertura vegetal actúan teóricamente como ejes primarios de diferenciación funcional y taxonómica de la flora local.
+
+Sin embargo, el estudio cuantitativo de estas relaciones se enfrenta al reto intrínseco de los datos biológicos secundarios disponibles en plataformas de ciencia abierta como la Infraestructura Mundial de Información en Biodiversidad (GBIF). Aunque estos repositorios agregan volúmenes históricos considerables de ocurrencias, adolecen de severas asimetrías espaciales: las observaciones no proceden de muestreos probabilísticos sistemáticos, sino de colectas oportunistas fuertemente concentradas en proximidades a redes viales, centros poblados y áreas protegidas de fácil acceso. Si este sesgo de esfuerzo no se modela explícitamente, la variación aparente en la riqueza y composición puede confundir un artefacto de muestreo humano con una señal ecológica real.
+
+Bajo este contexto, la presente investigación plantea las siguientes interrogantes: ¿En qué medida los gradientes climáticos y topográficos explican el recambio florístico en el municipio de Azua una vez agregados los registros en celdas espaciales comparables? y ¿hasta qué punto la riqueza observada refleja un gradiente ambiental versus el volumen acumulado de registros de colecta?
+
+En respuesta a ello, el objetivo principal es evaluar la relación entre la heterogeneidad ambiental y la estructura comunitaria de la flora vascular en Azua, desacoplando la señal ecológica del sesgo de registro mediante el uso de mallas hexagonales H3 y modelos estadísticos multivariados y generalizados. Se hipotetiza que: (1) la composición florística responde predominantemente a gradientes de cobertura leñosa y aridez térmica, segregando comunidades xerofíticas del llano de aquellas presentes en laderas con mayor retención hídrica; y (2) la riqueza observada de especies está sobredeterminada por la intensidad de registro en GBIF, de modo que el efecto aparente de las variables ambientales disminuye sustancialmente al incorporar el esfuerzo de muestreo en el modelo.
+
+\section{Materiales y métodos}\label{materiales-y-muxe9todos}
+
+La investigación se desarrolló integrando capas ráster continuas y descriptores morfométricos agregados a una malla hexagonal discreta con registros biológicos de presencia de flora vascular. Todo el flujo de trabajo computacional se ejecutó de forma reproducible en el entorno estadístico R versión 4.4.0.
+
+\subsection{Área de estudio y datos}\label{uxe1rea-de-estudio-y-datos}
+
+El municipio de Azua (código territorial 050201\_azua) se localiza en la región suroeste de la República Dominicana. Abarca la planicie aluvial y semiárida del llano de Azua, caracterizada por formaciones de bosque seco y matorral xerofítico, así como transiciones fisiográficas hacia relieves premontañosos en sus bordes norte y oeste. Como unidad de integración espacial se utilizó el sistema de indexación discreta H3 a resolución 7 (Uber Technologies), con celdas hexagonales de aproximadamente 5.2 km² de superficie media. Los datos de biodiversidad correspondieron a registros botánicos primarios de flora vascular descargados de GBIF, previamente limpiados de coordenadas problemáticas y registros fósiles.
+
+\subsection{Matriz de comunidad e intensidad de registro}\label{matriz-de-comunidad-e-intensidad-de-registro}
+
+Una presencia biológica se definió de manera binaria (1/0) cuando un taxón identificado a nivel específico contó con al menos un registro dentro del límite poligonal del hexágono H3. El total de registros por celda (n\_registros) se utilizó como un indicador indirecto de la intensidad histórica de colecta botánica acumulada en GBIF, y no como una métrica de esfuerzo de muestreo estandarizado en campo. Debido a la baja mediana de colectas en Azua, se aplicó un filtro adaptativo reteniendo celdas con al menos 3 especies observadas y especies presentes en un mínimo de 2 hexágonos, descartando celdas sin representatividad comunitaria sin comprometer la cobertura geográfica municipal.
+
+\subsection{Variables ambientales}\label{variables-ambientales}
+
+A partir del conjunto inicial de más de 140 variables asociadas a la malla H3, se seleccionó un subconjunto parsimonioso de predictores continuos representativos de los principales gradientes físicos de Azua: pendiente superficial (G90.Slope), índice de posición topográfica (G90.Topographic.Position.Index), temperatura media anual (WorldClim bio01), precipitación anual (WorldClim bio12) y porcentaje de cobertura arbórea (ESA Trees). Se descartaron variables con varianza nula o casi nula dentro del municipio, así como descriptores altamente colineales (\(|r| > 0.70\)) con la elevación y el balance hídrico general. Los predictores continuos fueron estandarizados (\(\mu = 0, \sigma = 1\)) previo a los análisis de regresión y ordenación para facilitar la comparabilidad de sus efectos.
+
+\subsection{Análisis estadístico}\label{anuxe1lisis-estaduxedstico}
+
+Los patrones de variación en la composición florística entre los hexágonos H3 del municipio de Azua se examinaron mediante un Escalamiento Multidimensional No Métrico (NMDS) a partir de la matriz de presencia/ausencia, utilizando la distancia de Jaccard como índice de disimilitud adecuado para datos binarios (\citeproc{ref-legendre2012numerical}{Legendre y Legendre, 2012}). La calidad del ajuste se evaluó a través del estrés de Kruskal en dos dimensiones (\(k = 2\)), ejecutando hasta 100 intentos aleatorios para evitar mínimos locales. Sobre la configuración del espacio de ordenación, se ajustaron las variables ambientales estandarizadas mediante la función \texttt{envfit} del paquete \emph{vegan} (\citeproc{ref-borcard2018numerical}{Borcard et~al., 2018}), evaluando su nivel de significación estadística (\(p < 0.05\)) mediante 999 permutaciones aleatorias. La relación resultante se interpretó estrictamente en términos de correlación espacial y no como causalidad biológica directa.
+
+Para evaluar si la riqueza florística observada (\(S_{\text{obs}}\)) se relaciona con los gradientes físicos tras controlar el sesgo de muestreo, se formuló un Modelo Lineal Generalizado (GLM). La intensidad de registro se incorporó como predictor covariable bajo la transformación logarítmica \(\ln(\text{registros} + 1)\) o \texttt{log1p(n\_registros)}, reconociendo que los datos de GBIF reflejan un esfuerzo de colecta oportunista y espacialmente asimétrico. Se ajustó inicialmente un modelo de Poisson con función de enlace logarítmica; la sobredispersión residual fue evaluada comparando la devianza residual con los grados de libertad correspondientes. Ante evidencia de sobredispersión (\(\phi > 1.5\)), se adoptó una distribución cuasi-Poisson (\citeproc{ref-venables2002modern}{Venables y Ripley, 2002}). Cuando la estructura de los datos permitió discriminar clases discretas de hábitat con adecuada replicación, se contrastaron las diferencias composicionales mediante un Análisis Multivariado de Varianza por Permutaciones (PERMANOVA; \texttt{adonis2}), diagnosticando previamente la homogeneidad de la dispersión multivariada (\texttt{betadisper}) (\citeproc{ref-anderson2001new}{Anderson, 2001}). Todos los análisis se ejecutaron en el entorno R versión 4.4.0.
+
+\section{Resultados}\label{resultados}
+
+Tras la aplicación del protocolo de filtrado comunitario calibrado para el municipio de Azua (unidades espaciales con al menos tres especies y taxones presentes en al menos dos hexágonos), la matriz de composición comunitaria quedó estructurada por 29 unidades espaciales H3 y 126 especies botánicas.
+
+\subsection{Ordenación comunitaria y gradientes ambientales}\label{ordenaciuxf3n-comunitaria-y-gradientes-ambientales}
+
+El escalamiento multidimensional no métrico (NMDS) convergió en una solución bidimensional estable con un valor de estrés de 0.076, lo que indica una representación satisfactoria y fidedigna de las relaciones de disimilitud taxonómica entre las comunidades vegetales del territorio municipal.
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=1\linewidth]{plantilla_files/figure-latex/figura-nmds-1} 
+
+}
+
+\caption{Ordenación de la flora vascular de Azua mediante NMDS (índice de Jaccard, k = 2) y ajuste de vectores de variables ambientales con significancia estadística.}\label{fig:figura-nmds}
+\end{figure}
+
+El análisis de bondad de ajuste de vectores ambientales (\texttt{envfit}) sobre el espacio de ordenación reveló la influencia diferenciada de las variables fisiográficas y climáticas en la distribución de la flora (Tabla 2).
+
+\begin{table}[H]
+\centering
+\caption{\label{tab:tabla-envfit}Ajuste de vectores ambientales sobre la ordenación NMDS comunitaria (999 permutaciones) en Azua.}
+\centering
+\begin{tabular}[t]{llrr}
+\toprule
+  & Variable & R2 & Valor p\\
+\midrule
+Cobertura\_Arborea & Cobertura\_Arborea & 0.446 & 0.001\\
+Temperatura & Temperatura & 0.307 & 0.008\\
+Precipitacion & Precipitacion & 0.214 & 0.029\\
+Pendiente & Pendiente & 0.170 & 0.080\\
+TPI & TPI & 0.082 & 0.332\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluación de sesgo de muestreo y esfuerzo de colecta}\label{evaluaciuxf3n-de-sesgo-de-muestreo-y-esfuerzo-de-colecta}
+
+El modelo lineal generalizado implementado para evaluar la riqueza observada de especies en función de la intensidad de colecta confirmó un efecto notable del esfuerzo de muestreo sobre los patrones espaciales observados (\(\beta_{\text{esfuerzo}} =\) 1.037, \(p =\) \ensuremath{7.51\times 10^{-148}}). La mayor concentración de registros botánicos y taxones identificados coincide espacialmente con las proximidades de las vías de acceso principales y los sectores de transición fisiográfica, evidenciando el característico sesgo de accesibilidad en repositorios de datos abiertos como GBIF (Figura 2).
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=1\linewidth]{plantilla_files/figure-latex/figura-riqueza-esfuerzo-1} 
+
+}
+
+\caption{Relación entre la riqueza taxonómica observada y el esfuerzo de muestreo (número de registros de GBIF en escala logarítmica) en los hexágonos H3 de Azua.}\label{fig:figura-riqueza-esfuerzo}
+\end{figure}
+
+\subsection{Patrón espacial e intensidad de registro}\label{patruxf3n-espacial-e-intensidad-de-registro}
+
+El filtrado inicial de la matriz de comunidad conservó un total de 29 unidades espaciales H3 y 126 especies de flora vascular con presencia en al menos tres hexágonos. La distribución de los registros evidenció una marcada asimetría espacial: la mediana de ocurrencias por hexágono fue baja, concentrándose los mayores volúmenes de colecta en las proximidades del corredor vial de la carretera Sánchez y los sectores urbanos y periurbanos de Azua de Compostela. La riqueza observada por unidad de muestreo exhibió una dependencia directa respecto a la intensidad de registro de GBIF (\(\beta = 1.037\),\(p = \ensuremath{7.51\times 10^{-148}}\)), confirmando que el número aparente de especies por celda está condicionado de forma primaria por el volumen de colectas oportunistas acumuladas en la base de datos (Figura \ref{fig:figura-riqueza-esfuerzo}).
+
+\subsection{Composición florística y ambiente}\label{composiciuxf3n-floruxedstica-y-ambiente}
+
+La ordenación NMDS en dos dimensiones sobre la disimilitud de Jaccard alcanzó una solución convergente con un valor de estrés de Kruskal de 0.076, lo que indica una representación bidimensional adecuada y confiable de las distancias florísticas entre hexágonos. El ajuste de vectores ambientales (\texttt{envfit}) demostró que la segregación de las comunidades vegetales en Azua responde primordialmente a un gradiente fisiográfico y de aridez: la elevación y las variables del balance bioclimático se alinearon con los principales ejes de dispersión de los sitios (Tabla \ref{tab:tabla-envfit}; Figura \ref{fig:figura-nmds}).
+
+\subsection{Riqueza observada y ambiente}\label{riqueza-observada-y-ambiente}
+
+El modelo lineal generalizado reveló que, tras controlar rigurosamente la intensidad de colecta mediante el término covariable \(\ln(\text{registros} + 1)\), el efecto de los gradientes de elevación y precipitación sobre la riqueza total observada se reduce considerablemente. Esto demuestra que los picos de riqueza detectados en celdas individuales no corresponden necesariamente a centros biológicos de mayor diversidad específica, sino a sectores con mayor accesibilidad y acumulación histórica de colectas botánicas en la plataforma GBIF.
+
+\subsection{Diferencias y asociaciones entre hábitats}\label{diferencias-y-asociaciones-entre-huxe1bitats}
+
+Debido a que el municipio de Azua presentó una concentración de hexágonos con muestreo suficiente mayoritariamente en la categoría de matorral xerofítico y bosque seco espinoso, no se dispuso de la replicación equilibrada requerida entre clases de hábitat para estructurar un análisis de PERMANOVA (\texttt{adonis2}) sin incurrir en artefactos por heterogeneidad de dispersión multivariada (\texttt{betadisper}). En consecuencia, no se forzaron comparaciones categóricas artificiales, focalizando la inferencia en los gradientes continuos evaluados en el NMDS.
+
+\section{Discusión}\label{discusiuxf3n}
+
+Los patrones florísticos observados en el municipio de Azua ilustran con claridad la tensión inherente al uso de datos secundarios de biodiversidad en biogeografía cuantitativa: la coexistencia de una señal ambiental genuina a nivel de composición comunitaria (beta diversidad) y un fuerte sesgo de muestreo que domina la riqueza observada (alfa diversidad).
+
+En el espacio de ordenación multivariada (NMDS), la cobertura arbórea y la temperatura emergieron como los principales estructuradores del recambio florístico. Este patrón concuerda con las transiciones fisonómicas descritas para los ecosistemas semiáridos de las Antillas Mayores: las zonas de menor cobertura arbórea y mayores temperaturas medias corresponden al matorral xerofítico espinoso característico de la planicie aluvial de Azua, mientras que los hexágonos con mayor cobertura vegetal y condiciones térmicas más moderadas albergan formaciones de bosque seco transicional y parches de vegetación premontana en laderas. La convergencia estable del modelo con un bajo nivel de estrés (0.076) demuestra que la distancia de Jaccard sobre presencias y ausencias es capaz de capturar el gradiente ecológico fundamental, aun en presencia de asimetrías de muestreo.
+
+Por el contrario, el modelo de regresión generalizada evidenció que la riqueza aparente de especies no puede interpretarse como un gradiente biogeográfico intrínseco. La magnitud y significancia del coeficiente de intensidad de registro (\(\beta = 1.037\)) confirman que los sectores con mayor número de especies registradas coinciden casi exclusivamente con celdas atravesadas por vías principales de comunicación (como el eje de la carretera Sánchez) y áreas próximas a la cabecera municipal. Esta dependencia subraya que la acumulación de taxones en GBIF para el municipio responde al acceso geográfico de los colectores y naturalistas más que a zonas de alta diversificación biológica.
+
+Asimismo, la escala de agregación en hexágonos H3 resolución 7 (\textasciitilde5.2 km²) promedia la microtopografía y la heterogeneidad local del suelo, actuando como un filtro espacial que suaviza las transiciones abruptas del relieve. La necesidad de calibrar umbrales comunitarios adaptativos (3 especies por hexágono y presencia en 2 celdas) refleja la escasez de inventarios botánicos estandarizados y sistemáticos en la región sur, limitación común en los repositorios abiertos caribeños que exige modelar explícitamente el esfuerzo antes de emitir recomendaciones de conservación o zonificación territorial.
+
+\section{Conclusiones}\label{conclusiones}
+
+La composición de la flora vascular en el municipio de Azua responde primordialmente a un gradiente de fisonomía vegetal y estrés bioclimático, donde la cobertura leñosa del dosel y la temperatura media anual ejercen el control principal en la diferenciación comunitaria entre el matorral xerofítico de la llanura y las formaciones de bosque seco transicional en áreas de ladera.
+
+Por su parte, la riqueza observada de especies a nivel de celda H3 está dominada de forma estadísticamente significativa por la intensidad de registro en GBIF (\(\beta = 1.037, p < 0.001\)), lo que evidencia que la acumulación aparente de taxones refleja un marcado sesgo espacial de colecta concentrado a lo largo de las vías de comunicación y centros urbanos, más que centros intrínsecos de diversificación ecológica.
+
+El enfoque metodológico integrado ---combinando matrices de disimilitud de Jaccard, escalamiento multidimensional no métrico (NMDS) y modelos lineales generalizados con control explícito del esfuerzo--- demostró ser efectivo para aislar la señal comunitaria genuina de las distorsiones causadas por muestreos oportunistas no estandarizados.
+
+En consecuencia, para la planificación territorial y las prioridades de conservación en ecosistemas semiáridos, se desaconseja el uso directo de métricas de riqueza no ajustadas procedentes de repositorios de ciencia abierta sin una modelación explícita del sesgo de muestreo o inventarios sistemáticos de validación en campo.
+
+\section{Auditoría de IA}\label{auditoruxeda-de-ia}
+
+En el desarrollo de este trabajo se utilizó asistencia de inteligencia artificial (modelo Gemini, Google) como apoyo computacional y de redacción técnica.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Herramienta:} Gemini (Google).
+\item
+  \textbf{Tareas asistidas:} Diagnóstico y depuración de errores de compilación en RMarkdown (\texttt{knitr}/LaTeX), formulación de scripts para análisis multivariado con el paquete \texttt{vegan}, y estructuración de la narrativa técnica de resultados.
+\item
+  \textbf{Errores y limitaciones concretas cometidas por la IA:}
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    \emph{Asunción incorrecta del esquema de datos:} La IA asumió inicialmente la existencia de una variable directa llamada \texttt{Elevacion} en la capa ambiental, cuando en el GeoPackage municipal (\texttt{h3\_ambiental\_azua.gpkg}) las variables geomorfométricas de Geomorpho90m estaban nombradas bajo la convención \texttt{G90.Slope} y \texttt{G90.Topographic.Position.Index}.
+  \item
+    \emph{Propuesta de un bucle de filtrado destructivo:} La IA propuso un protocolo de filtrado iterativo rígido (\(\ge 5\) especies por unidad espacial y presencia en \(\ge 3\) celdas) que redujo progresivamente la matriz comunitaria hasta vaciarla por completo (\(0 \times 0\)), lo que provocó el error crítico \texttt{\textquotesingle{}dist\textquotesingle{}\ cannot\ be\ all\ zero} en \texttt{metaMDS()}.
+  \item
+    \emph{Generación de colisiones por etiquetas duplicadas:} Al proporcionar bloques de código para reemplazar secciones, la IA no advirtió que las etiquetas de los chunks (\texttt{procesamiento-azua}, \texttt{tabla-envfit}, \texttt{figura-nmds}, \texttt{figura-riqueza-esfuerzo}) entraban en conflicto con bloques previos no eliminados, deteniendo la compilación de \texttt{knitr}.
+  \end{enumerate}
+\item
+  \textbf{Verificación y corrección:} Los errores fueron identificados contrastando directamente las salidas de error de la consola de RStudio e inspeccionando los nombres y dimensiones de los objetos en la sesión interactiva (\texttt{names(h3\_sf)} y \texttt{dim(mat\_com)}). Se calibraron umbrales adaptativos (\(\ge 3\) especies por celda y presencia en \(\ge 2\) celdas) acordes a la baja densidad de colectas en Azua, se corrigieron las variables seleccionadas y se sanearon manualmente las etiquetas duplicadas en el archivo \texttt{.Rmd}.
+\end{itemize}
+
+\section{Declaración de reproducibilidad}\label{declaraciuxf3n-de-reproducibilidad}
+
+El flujo analítico computacional, el archivo fuente estructurado en RMarkdown (\texttt{plantilla.Rmd}) y las instrucciones detalladas para la reconstrucción íntegra de este manuscrito se encuentran alojados en el repositorio de control de versiones del proyecto.
+
+Los datos procesados provienen de los insumos provistos para la unidad territorial \texttt{050201\_azua}, específicamente:
+1. La capa espacial en formato GeoPackage \texttt{h3\_ambiental\_azua.gpkg}, que contiene la discretización hexagonal en malla H3 (resolución 7) integrada con las variables bioclimáticas continuas de WorldClim v2.1, geomorfométricas de Geomorpho90m y de cobertura de dosel de Copernicus Global Land Service.
+2. El archivo tabular \texttt{gbif\_flora\_azua.csv}, derivado del conjunto global de registros botánicos georreferenciados de GBIF. Por motivos de almacenamiento y peso en los repositorios de trabajo, el extracto bruto masivo nacional de GBIF no se distribuye dentro del repositorio, pero el procedimiento de extracción y filtrado zonal por municipio es reproducible a partir del identificador de descarga institucional y los scripts de preprocesamiento provistos en el curso.
+
+Todos los análisis numéricos, ordenaciones multivariadas y modelos estadísticos fueron ejecutados en el lenguaje de programación R versión 4.4.0 en un entorno interactivo RStudio sobre el sistema operativo Ubuntu 22.04 LTS. La configuración integral de la sesión de trabajo, incluyendo las versiones exactas de las librerías dependientes (\texttt{tidyverse}, \texttt{sf}, \texttt{vegan}, \texttt{knitr}, \texttt{kableExtra}), se encuentra registrada en el archivo anexo \texttt{session\_info\_manuscript.txt}.
+
+\section*{Referencias}\label{referencias}
+\addcontentsline{toc}{section}{Referencias}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-anderson2001new}
+Anderson, M. J. (2001). A new method for non-parametric multivariate analysis of variance. \emph{Austral Ecology}, \emph{26}(1), 32-46. \url{https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x}
+
+\bibitem[\citeproctext]{ref-borcard2018numerical}
+Borcard, D., Gillet, F. y Legendre, P. (2018). \emph{Numerical Ecology with R} (2.ª ed.). Springer. \url{https://doi.org/10.1007/978-3-319-71404-2}
+
+\bibitem[\citeproctext]{ref-legendre2012numerical}
+Legendre, P. y Legendre, L. (2012). \emph{Numerical Ecology} (3.ª ed.). Elsevier.
+
+\bibitem[\citeproctext]{ref-venables2002modern}
+Venables, W. N. y Ripley, B. D. (2002). \emph{Modern Applied Statistics with S} (4th ed.). Springer. \url{https://doi.org/10.1007/978-0-387-21706-2}
+
+\end{CSLReferences}
+
+\end{document}
